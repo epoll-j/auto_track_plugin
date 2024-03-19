@@ -77,22 +77,22 @@ class Track {
 class _TrackPlugin {
 
   static void pageView(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('page_view', DateTime.now().millisecondsSinceEpoch, params));
+    AutoTrackQueue.instance.appendQueue(TrackModel('page_view', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']));
   }
 
   static void pageLeave(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('page_leave', DateTime.now().millisecondsSinceEpoch, params));
+    AutoTrackQueue.instance.appendQueue(TrackModel('page_leave', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']));
   }
 
   static void click(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('click', DateTime.now().millisecondsSinceEpoch, params));
+    AutoTrackQueue.instance.appendQueue(TrackModel('click', DateTime.now().millisecondsSinceEpoch, params, params['element_manual_key']));
   }
 
   static void customEvent(String type, Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel(type, DateTime.now().millisecondsSinceEpoch, params));
+    AutoTrackQueue.instance.appendQueue(TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? type));
   }
 
   static void scroll(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('scroll', DateTime.now().millisecondsSinceEpoch, params));
+    // AutoTrackQueue.instance.appendQueue(TrackModel('scroll', DateTime.now().millisecondsSinceEpoch, params));
   }
 }
