@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 
 import '../config/config.dart';
@@ -12,8 +15,8 @@ class PageInfo {
     PageInfo pageInfo = PageInfo._(PageTimer());
     pageInfo._pageKey = element.widget.runtimeType.toString();
     pageInfo._pagePath = pageConfig.pagePath ?? route.settings.name ?? '';
-    pageInfo._pageManualKey = pageConfig.pageID ?? '';
     pageInfo._pageTitle = pageConfig.pageTitle ?? pageInfo._findTitle(element) ?? '';
+    pageInfo._pageManualKey = pageConfig.pageID ?? md5.convert(utf8.encode('${pageInfo._pageKey}${pageInfo._pagePath}${pageInfo._pageTitle}')).toString();
     pageInfo.ignore = pageConfig.ignore;
     return pageInfo;
   }

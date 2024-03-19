@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/widgets.dart';
 
 import '../config/manager.dart';
@@ -30,7 +33,7 @@ class ClickInfo {
     if (key != null && key is ValueKey) {
       clickInfo._elementManualKey = (key).value;
     } else {
-      clickInfo._elementManualKey = key?.toString() ?? '';
+      clickInfo._elementManualKey = key?.toString() ?? md5.convert(utf8.encode('${clickInfo._elementType}${clickInfo._elementPath}')).toString();
     }
     clickInfo._ignore = AutoTrackConfigManager.instance.isIgnoreElement(key);
     if (key is AutoTrackElementKey && !clickInfo._ignore) {
