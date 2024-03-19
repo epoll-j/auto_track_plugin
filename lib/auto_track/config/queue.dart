@@ -48,6 +48,8 @@ class AutoTrackQueue {
         'user_id': config.userId ?? '',
         'track_id': config.trackId ?? '',
         'data_list': uploadList.map((e) => e.toMap()).toList(),
+        'app_version': AutoTrackConfigManager.instance.appVersion,
+        'device_info': AutoTrackConfigManager.instance.deviceInfo
       }).onError((error, stackTrace) {
         AutoTrackLogger.getInstance().error(error!);
         return Future.value(Response(statusCode: 500, requestOptions: RequestOptions(path: host)));

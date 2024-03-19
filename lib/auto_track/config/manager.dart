@@ -1,11 +1,25 @@
 import 'package:auto_track/auto_track/config/queue.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
 
 class AutoTrackConfigManager {
   static final AutoTrackConfigManager instance = AutoTrackConfigManager._();
-  AutoTrackConfigManager._();
+
+
+  AutoTrackConfigManager._() {
+    PackageInfo.fromPlatform().then((value) => _appVersion = value.version);
+    DeviceInfoPlugin().deviceInfo.then((value) => _deviceInfo = value.data);
+  }
+
+  String _appVersion = '';
+  String get appVersion => _appVersion;
+
+  Map<String, dynamic> _deviceInfo = {};
+  Map<String, dynamic> get deviceInfo => _deviceInfo;
+
 
   AutoTrackConfig _config = AutoTrackConfig();
   AutoTrackConfig get config => _config;

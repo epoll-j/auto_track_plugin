@@ -9,9 +9,11 @@ environment:
 
 dependencies:
   crypto: ^3.0.3
+  device_info_plus: ^9.1.2
   dio: ^5.4.1
   flutter:
     sdk: flutter
+  package_info_plus: ^5.0.1
   plugin_platform_interface: ^2.0.2
   uuid: ^4.3.3
 
