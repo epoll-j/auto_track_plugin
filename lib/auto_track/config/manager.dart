@@ -64,6 +64,10 @@ class AutoTrackConfigManager {
     _config.enableClick = enable;
   }
 
+  void enableDrag(bool enable) {
+    _config.enableDrag = enable;
+  }
+
   void enableAutoTrack(bool enable) {
     _autoTrackEnable = enable;
   }
@@ -102,6 +106,11 @@ class AutoTrackConfigManager {
     if (getIgnoreElementStringKeySet().contains(key.toString())) {
       return true;
     }
+
+    if (key is ValueKey) {
+      return getIgnoreElementStringKeySet().contains(key.value);
+    }
+
     return false;
   }
 
@@ -110,4 +119,6 @@ class AutoTrackConfigManager {
   bool get pageLeaveEnable => _config.enablePageLeave;
 
   bool get clickEnable => _config.enableClick;
+
+  bool get dragEnable => _config.enableDrag;
 }

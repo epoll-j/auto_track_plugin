@@ -19,7 +19,8 @@ class AutoTrackConfig {
     this.enablePageView = true,
     this.enablePageLeave = false,
     this.enableClick = true,
-    this.enableUpload = false
+    this.enableUpload = false,
+    this.enableDrag = false
   }) {
     trackId ??= const Uuid().v4().replaceAll('-', '');
     signature ??= (t) => sha256.convert(utf8.encode('$appKey$t$appSecret')).toString();
@@ -55,6 +56,8 @@ class AutoTrackConfig {
   bool enableClick;
 
   bool enableUpload;
+
+  bool enableDrag;
 }
 
 typedef PageWidgetFunc = bool Function(Widget);

@@ -1,4 +1,5 @@
 import 'package:auto_track/auto_track/config/queue.dart';
+import 'package:auto_track/auto_track/drag/drag_info.dart';
 import 'package:auto_track/auto_track/utils/track_model.dart';
 
 import '../click/click_info.dart';
@@ -68,6 +69,32 @@ class Track {
     AutoTrackLogger.getInstance().debug('track click => $params');
   }
 
+  void drag(DragInfo dragInfo) {
+    if (!AutoTrackConfigManager.instance.autoTrackEnable) {
+      return;
+    }
+    if (!AutoTrackConfigManager.instance.dragEnable) {
+      return;
+    }
+    Map<String, dynamic> params = {};
+    params['manual_key'] = 'drag';
+    params['begin'] = {
+      'x': dragInfo.beginOffset.dx,
+      'y': dragInfo.beginOffset.dy,
+    };
+    params['end'] = {
+      'x': dragInfo.endOffset.dx,
+      'y': dragInfo.endOffset.dy,
+    };
+    params['drag_duration'] = dragInfo.duration;
+    params['drag_direction'] = dragInfo.direction;
+
+    _appendPageInfo(params, dragInfo.pageInfo);
+    _TrackPlugin.drag(params);
+    AutoTrackLogger.getInstance().debug('track drag => $params');
+
+  }
+
   void customEvent(String type, Map<String, dynamic> params) {
     _TrackPlugin.customEvent(type, params);
     AutoTrackLogger.getInstance().debug('track custom_event => $params');
@@ -92,7 +119,7 @@ class _TrackPlugin {
     AutoTrackQueue.instance.appendQueue(TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? type));
   }
 
-  static void scroll(Map<String, dynamic> params) {
-    // AutoTrackQueue.instance.appendQueue(TrackModel('scroll', DateTime.now().millisecondsSinceEpoch, params));
+  static void drag(Map<String, dynamic> params) {
+    AutoTrackQueue.instance.appendQueue(TrackModel('drag', DateTime.now().millisecondsSinceEpoch, params, params['manual_key']));
   }
 }

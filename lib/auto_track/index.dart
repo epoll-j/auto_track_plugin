@@ -1,3 +1,4 @@
+import 'package:auto_track/auto_track/drag/drag_pointer_event_listener.dart';
 import 'package:flutter/foundation.dart';
 
 import 'click/pointer_event_listener.dart';
@@ -81,6 +82,16 @@ class AutoTrack {
     return _instance;
   }
 
+  AutoTrack enableDrag() {
+    AutoTrackConfigManager.instance.enableDrag(true);
+    return _instance;
+  }
+
+  AutoTrack disableDrag() {
+    AutoTrackConfigManager.instance.enableDrag(true);
+    return _instance;
+  }
+
   AutoTrack disableClick() {
     AutoTrackConfigManager.instance.enableClick(false);
     return _instance;
@@ -89,12 +100,14 @@ class AutoTrack {
   AutoTrack enable() {
     AutoTrackConfigManager.instance.enableAutoTrack(true);
     PointerEventListener.instance.start();
+    DragPointerEventListener.instance.start();
     return _instance;
   }
 
   AutoTrack disable() {
     AutoTrackConfigManager.instance.enableAutoTrack(false);
     PointerEventListener.instance.stop();
+    DragPointerEventListener.instance.stop();
     return _instance;
   }
 
