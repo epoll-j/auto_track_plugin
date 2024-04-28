@@ -15,14 +15,14 @@ class AutoTrackConfigManager {
     PackageInfo.fromPlatform().then((value) => _appVersion = value.version);
     DeviceInfoPlugin().deviceInfo.then((value) {
       _deviceInfo = value.data;
-      baseDeviceInfo = value;
+      _baseDeviceInfo = value;
     });
   }
 
   String _appVersion = '';
   String get appVersion => _appVersion;
 
-  BaseDeviceInfo? baseDeviceInfo;
+  BaseDeviceInfo? _baseDeviceInfo;
   String _deviceId = '';
   String get deviceId => _deviceId;
 
@@ -37,10 +37,10 @@ class AutoTrackConfigManager {
 
   void updateConfig(AutoTrackConfig config) {
     _config = config;
-    if (baseDeviceInfo is IosDeviceInfo) {
-      _deviceId = md5.convert(utf8.encode('${(baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
-    } else if (baseDeviceInfo is AndroidDeviceInfo) {
-      _deviceId = md5.convert(utf8.encode('${(baseDeviceInfo as AndroidDeviceInfo).serialNumber}#${config.appKey}')).toString();
+    if (_baseDeviceInfo is IosDeviceInfo) {
+      _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
+    } else if (_baseDeviceInfo is AndroidDeviceInfo) {
+      _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as AndroidDeviceInfo).serialNumber}#${config.appKey}')).toString();
     } else {
       _deviceId = '';
     }
