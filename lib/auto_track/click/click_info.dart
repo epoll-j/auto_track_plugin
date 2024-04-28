@@ -35,10 +35,7 @@ class ClickInfo {
     } else {
       clickInfo._elementManualKey = key?.toString() ?? md5.convert(utf8.encode('${clickInfo._elementType}${clickInfo._elementPath}')).toString();
     }
-    clickInfo._ignore = AutoTrackConfigManager.instance.isIgnoreElement(key);
-    if (key is AutoTrackElementKey && !clickInfo._ignore) {
-      clickInfo._ignore = key.ignore;
-    }
+    clickInfo._ignore = clickInfo._checkIgnore(key, clickInfo);
 
     return clickInfo;
   }
@@ -71,6 +68,23 @@ class ClickInfo {
   List<String> get texts => _texts;
 
   final PageInfo pageInfo;
+
+  bool _checkIgnore(Key? key, ClickInfo clickInfo) {
+    if (AutoTrackConfigManager.instance.isIgnoreElement(key)) {
+      return true;
+    }
+    if (key is AutoTrackElementKey) {
+      if (key.ignore) {
+        return true;
+      }
+    }
+
+    if (key == null && AutoTrackConfigManager.instance.config.enableIgnoreNullKey) {
+      return true;
+    }
+
+    return false;
+  }
 
   @override
   String toString() {

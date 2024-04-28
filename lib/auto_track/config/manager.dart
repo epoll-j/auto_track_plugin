@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:auto_track/auto_track/config/queue.dart';
+import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -8,18 +11,23 @@ import 'config.dart';
 class AutoTrackConfigManager {
   static final AutoTrackConfigManager instance = AutoTrackConfigManager._();
 
-
   AutoTrackConfigManager._() {
     PackageInfo.fromPlatform().then((value) => _appVersion = value.version);
-    DeviceInfoPlugin().deviceInfo.then((value) => _deviceInfo = value.data);
+    DeviceInfoPlugin().deviceInfo.then((value) {
+      _deviceInfo = value.data;
+      baseDeviceInfo = value;
+    });
   }
 
   String _appVersion = '';
   String get appVersion => _appVersion;
 
+  BaseDeviceInfo? baseDeviceInfo;
+  String _deviceId = '';
+  String get deviceId => _deviceId;
+
   Map<String, dynamic> _deviceInfo = {};
   Map<String, dynamic> get deviceInfo => _deviceInfo;
-
 
   AutoTrackConfig _config = AutoTrackConfig();
   AutoTrackConfig get config => _config;
@@ -29,6 +37,13 @@ class AutoTrackConfigManager {
 
   void updateConfig(AutoTrackConfig config) {
     _config = config;
+    if (baseDeviceInfo is IosDeviceInfo) {
+      _deviceId = md5.convert(utf8.encode('${(baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
+    } else if (baseDeviceInfo is AndroidDeviceInfo) {
+      _deviceId = md5.convert(utf8.encode('${(baseDeviceInfo as AndroidDeviceInfo).serialNumber}#${config.appKey}')).toString();
+    } else {
+      _deviceId = '';
+    }
     if (config.enableUpload) {
       AutoTrackQueue.instance.start();
     } else {
@@ -81,20 +96,24 @@ class AutoTrackConfigManager {
     }
   }
 
+  void enableIgnoreNullKey(bool enable) {
+    _config.enableIgnoreNullKey = enable;
+  }
+
   List<AutoTrackPageConfig> get pageConfigs => _config.pageConfigs;
 
   bool get useCustomRoute => _config.useCustomRoute;
 
   AutoTrackPageConfig getPageConfig(Widget pageWidget) {
     return _config.pageConfigs.firstWhere(
-            (pageConfig) => pageConfig.isPageWidget!(pageWidget),
-        orElse: () => AutoTrackPageConfig()
-    );
+        (pageConfig) => pageConfig.isPageWidget!(pageWidget),
+        orElse: () => AutoTrackPageConfig());
   }
 
   Set<Key> getIgnoreElementKeySet() => _config.getIgnoreElementKeySet();
 
-  Set<String> getIgnoreElementStringKeySet() => _config.getIgnoreElementStringKeySet();
+  Set<String> getIgnoreElementStringKeySet() =>
+      _config.getIgnoreElementStringKeySet();
 
   bool isIgnoreElement(Key? key) {
     if (key == null) {
@@ -121,4 +140,6 @@ class AutoTrackConfigManager {
   bool get clickEnable => _config.enableClick;
 
   bool get dragEnable => _config.enableDrag;
+
+  bool get ignoreNullKeyEnable => _config.enableIgnoreNullKey;
 }

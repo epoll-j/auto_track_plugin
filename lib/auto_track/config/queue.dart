@@ -47,6 +47,7 @@ class AutoTrackQueue {
         't': t,
         'user_id': config.userId ?? '',
         'track_id': config.trackId ?? '',
+        'unique_id': config.uniqueId ?? AutoTrackConfigManager.instance.deviceId,
         'data_list': uploadList.map((e) => e.toMap()).toList(),
         'app_version': AutoTrackConfigManager.instance.appVersion,
         'device_info': AutoTrackConfigManager.instance.deviceInfo

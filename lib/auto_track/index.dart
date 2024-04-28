@@ -67,6 +67,16 @@ class AutoTrack {
     return _instance;
   }
 
+  AutoTrack enableIgnoreNullKey() {
+    AutoTrackConfigManager.instance.enableIgnoreNullKey(true);
+    return _instance;
+  }
+
+  AutoTrack disableIgnoreNullKey() {
+    AutoTrackConfigManager.instance.enableIgnoreNullKey(false);
+    return _instance;
+  }
+
   AutoTrack enableUpload() {
     AutoTrackConfigManager.instance.enableUpload(true);
     return _instance;

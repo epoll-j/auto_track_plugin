@@ -12,6 +12,7 @@ class AutoTrackConfig {
     this.trackId,
     this.userId,
     this.signature,
+    this.uniqueId,
     this.pageConfigs = const [],
     this.useCustomRoute = false,
     this.ignoreElementKeys = const [],
@@ -20,7 +21,8 @@ class AutoTrackConfig {
     this.enablePageLeave = false,
     this.enableClick = true,
     this.enableUpload = false,
-    this.enableDrag = false
+    this.enableDrag = false,
+    this.enableIgnoreNullKey = false
   }) {
     trackId ??= const Uuid().v4().replaceAll('-', '');
     signature ??= (t) => sha256.convert(utf8.encode('$appKey$t$appSecret')).toString();
@@ -31,6 +33,8 @@ class AutoTrackConfig {
   String? appSecret;
   String? trackId;
   String? userId;
+  String? uniqueId;
+
   Function? signature;
 
   List<AutoTrackPageConfig> pageConfigs;
@@ -58,6 +62,8 @@ class AutoTrackConfig {
   bool enableUpload;
 
   bool enableDrag;
+
+  bool enableIgnoreNullKey;
 }
 
 typedef PageWidgetFunc = bool Function(Widget);

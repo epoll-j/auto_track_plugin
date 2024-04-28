@@ -17,7 +17,7 @@ class PageInfo {
     pageInfo._pagePath = pageConfig.pagePath ?? route.settings.name ?? '';
     pageInfo._pageTitle = pageConfig.pageTitle ?? pageInfo._findTitle(element) ?? '';
     pageInfo._pageManualKey = pageConfig.pageID ?? md5.convert(utf8.encode('${pageInfo._pageKey}${pageInfo._pagePath}${pageInfo._pageTitle}')).toString();
-    pageInfo.ignore = pageConfig.ignore;
+    pageInfo.ignore = pageInfo._checkIgnore(pageConfig);
     return pageInfo;
   }
 
@@ -36,6 +36,18 @@ class PageInfo {
 
   String _pagePath = '';
   String get pagePath => _pagePath;
+
+  bool _checkIgnore(AutoTrackPageConfig pageConfig) {
+    if (pageConfig.ignore) {
+      return true;
+    }
+
+    if (AutoTrackConfigManager.instance.config.enableIgnoreNullKey && pageConfig.pageID == null) {
+      return true;
+    }
+
+    return false;
+  }
 
   String? _findTitle(Element element) {
     String? title;
