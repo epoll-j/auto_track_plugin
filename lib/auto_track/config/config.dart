@@ -22,7 +22,8 @@ class AutoTrackConfig {
     this.enableClick = true,
     this.enableUpload = false,
     this.enableDrag = false,
-    this.enableIgnoreNullKey = false
+    this.enableIgnoreNullKey = false,
+    this.uploadInterval
   }) {
     trackId ??= const Uuid().v4().replaceAll('-', '');
     signature ??= (t) => sha256.convert(utf8.encode('$appKey$t$appSecret')).toString();
@@ -34,6 +35,8 @@ class AutoTrackConfig {
   String? trackId;
   String? userId;
   String? uniqueId;
+
+  int? uploadInterval;
 
   Function? signature;
 

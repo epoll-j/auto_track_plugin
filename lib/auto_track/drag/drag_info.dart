@@ -16,8 +16,7 @@ class DragInfo {
     dragInfo._beginOffset = begin;
     dragInfo._endOffset = end;
     dragInfo._duration = duration;
-    dragInfo._ignore = AutoTrackConfigManager.instance.isIgnoreElement(
-        pageElement.widget.key ?? ValueKey(pageInfo.pageManualKey));
+    dragInfo._ignore = pageInfo.ignore;
 
     double dx = dragInfo.endOffset.dx - dragInfo.beginOffset.dx;
     double dy = dragInfo.endOffset.dy - dragInfo.beginOffset.dy;

@@ -23,7 +23,7 @@ class AutoTrackQueue {
 
   void start() {
     if (_timer != null) return;
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(Duration(seconds: AutoTrackConfigManager.instance.config.uploadInterval ?? 10), (timer) {
       flush();
     });
   }

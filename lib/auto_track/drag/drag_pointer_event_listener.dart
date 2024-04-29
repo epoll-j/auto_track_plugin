@@ -51,7 +51,7 @@ class _AutoTrackPanGestureRecognizer extends PanGestureRecognizer {
       if (beginEvent != null) {
         final distance = (beginEvent!.position.dx - event.position.dx).abs() +
             (beginEvent!.position.dy - event.position.dy).abs();
-        if (distance > 30) {
+        if (distance > 50) {
           final info = DragInfo.from(
               begin: beginEvent!.position,
               end: event.position,

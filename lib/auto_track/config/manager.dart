@@ -41,6 +41,8 @@ class AutoTrackConfigManager {
       _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
     } else if (_baseDeviceInfo is AndroidDeviceInfo) {
       _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as AndroidDeviceInfo).serialNumber}#${config.appKey}')).toString();
+    } else if (_baseDeviceInfo is MacOsDeviceInfo) {
+      _deviceId = '${(_baseDeviceInfo as MacOsDeviceInfo).hostName}-${(_baseDeviceInfo as MacOsDeviceInfo).computerName}';
     } else {
       _deviceId = '';
     }
