@@ -5,11 +5,25 @@ class PageA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("tap page a");
-      },
-      child: const Text('page a'),
+    return Container(
+      margin: const EdgeInsets.only(top: 200),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              print("tap page a null key");
+            },
+            child: const Text('null key'),
+          ),
+          GestureDetector(
+            key: const Key('page-a-click'),
+            onTap: () {
+              print("tap page a");
+            },
+            child: const Text('have key'),
+          )
+        ],
+      ),
     );
   }
 }

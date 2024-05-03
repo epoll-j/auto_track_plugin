@@ -1,6 +1,4 @@
 import 'package:auto_track/auto_track.dart';
-import 'package:auto_track/auto_track/config/config.dart';
-import 'package:auto_track/auto_track/index.dart';
 import 'package:auto_track_example/home.dart';
 import 'package:auto_track_example/page_a.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +24,13 @@ class _MyAppState extends State<MyApp> {
           AutoTrackPageConfig<PageA>(
             pageID: 'page_a',
           ),
-
         ]))
         .enable()
         .enablePageLeave()
         .enablePageView()
         .enableClick()
+        .enableDrag()
+        .enableIgnoreNullKey()
         .enableLog();
 
     super.initState();

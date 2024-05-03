@@ -1,7 +1,7 @@
 name: auto_track
 description: "Auto Track Plugin"
 version: 0.0.1
-homepage:
+homepage: https://github.com/epoll-j/auto_track_plugin
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
