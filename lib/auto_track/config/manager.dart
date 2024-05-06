@@ -16,6 +16,7 @@ class AutoTrackConfigManager {
     DeviceInfoPlugin().deviceInfo.then((value) {
       _deviceInfo = value.data;
       _baseDeviceInfo = value;
+      _updateDeviceId();
     });
   }
 
@@ -23,8 +24,8 @@ class AutoTrackConfigManager {
   String get appVersion => _appVersion;
 
   BaseDeviceInfo? _baseDeviceInfo;
-  String _deviceId = '';
-  String get deviceId => _deviceId;
+  String? _deviceId;
+  String? get deviceId => _deviceId;
 
   Map<String, dynamic> _deviceInfo = {};
   Map<String, dynamic> get deviceInfo => _deviceInfo;
@@ -37,6 +38,15 @@ class AutoTrackConfigManager {
 
   void updateConfig(AutoTrackConfig config) {
     _config = config;
+    _updateDeviceId();
+    if (config.enableUpload) {
+      AutoTrackQueue.instance.start();
+    } else {
+      AutoTrackQueue.instance.stop();
+    }
+  }
+
+  void _updateDeviceId() {
     if (_baseDeviceInfo is IosDeviceInfo) {
       _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
     } else if (_baseDeviceInfo is AndroidDeviceInfo) {
@@ -44,12 +54,7 @@ class AutoTrackConfigManager {
     } else if (_baseDeviceInfo is MacOsDeviceInfo) {
       _deviceId = '${(_baseDeviceInfo as MacOsDeviceInfo).hostName}-${(_baseDeviceInfo as MacOsDeviceInfo).computerName}';
     } else {
-      _deviceId = '';
-    }
-    if (config.enableUpload) {
-      AutoTrackQueue.instance.start();
-    } else {
-      AutoTrackQueue.instance.stop();
+      _deviceId = null;
     }
   }
 
@@ -108,7 +113,7 @@ class AutoTrackConfigManager {
 
   AutoTrackPageConfig getPageConfig(Widget pageWidget) {
     return _config.pageConfigs.firstWhere(
-        (pageConfig) => pageConfig.isPageWidget!(pageWidget),
+            (pageConfig) => pageConfig.isPageWidget!(pageWidget),
         orElse: () => AutoTrackPageConfig());
   }
 

@@ -40,7 +40,7 @@ class AutoTrackQueue {
     final config = AutoTrackConfigManager.instance.config;
     final host = config.host;
     if (host != null) {
-      final t = DateTime.now().millisecond;
+      final t = DateTime.now().millisecondsSinceEpoch;
       dio.post(host, data: {
         'app_key': config.appKey ?? '',
         'signature': config.signature!(t),
