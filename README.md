@@ -127,7 +127,7 @@ class PageA extends StatelessWidget {
 数据上报需配合服务端使用，参考 [AutoTrack Server（开发中）](https://github.com/epoll-j/auto_track_server)，可自行实现服务端。
 
 数据上报的格式
-```json
+```
 {
     'app_key': config.appKey ?? '',
     'signature': config.signature!(t), // 签名，可自行配置具体实现的签名算法
@@ -142,7 +142,7 @@ class PageA extends StatelessWidget {
 }
 ```
 
-```json
+```
 // TrackModel
 {
     'type': type, //事件类型 page_view | page_leave | click | drag | custom（自定义类型）
