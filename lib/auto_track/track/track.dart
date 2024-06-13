@@ -1,5 +1,6 @@
 import 'package:auto_track/auto_track/config/queue.dart';
 import 'package:auto_track/auto_track/drag/drag_info.dart';
+import 'package:auto_track/auto_track/utils/error_model.dart';
 import 'package:auto_track/auto_track/utils/track_model.dart';
 
 import '../click/click_info.dart';
@@ -98,6 +99,10 @@ class Track {
   void customEvent(String type, Map<String, dynamic> params) {
     _TrackPlugin.customEvent(type, params);
     AutoTrackLogger.getInstance().debug('track custom_event => $params');
+  }
+
+  void reportError(Object error, StackTrace stack) {
+    _TrackPlugin.customEvent('error', ErrorModel(error: error, stack: stack).toMap());
   }
 }
 
