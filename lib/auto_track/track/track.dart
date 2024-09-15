@@ -21,6 +21,8 @@ class Track {
     return params;
   }
 
+  String? get deviceId => AutoTrackConfigManager.instance.deviceId;
+
   void pageView(PageInfo pageInfo) {
     if (!AutoTrackConfigManager.instance.autoTrackEnable) {
       return;
