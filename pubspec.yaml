@@ -1,6 +1,6 @@
-name: auto_track_plugin
+name: auto_track
 description: "Auto Track Plugin"
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/epoll-j/auto_track_plugin
 
 environment:
