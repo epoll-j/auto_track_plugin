@@ -3,7 +3,6 @@ import 'package:auto_track_example/home.dart';
 import 'package:auto_track_example/page_a.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -20,11 +19,14 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     AutoTrack()
         .config(AutoTrackConfig(
-        pageConfigs: [
-          AutoTrackPageConfig<PageA>(
-            pageID: 'page_a',
-          ),
-        ]))
+            eventHandler: (model) => {
+              print('event handler ${model.type}')
+            },
+            pageConfigs: [
+              AutoTrackPageConfig<PageA>(
+                pageID: 'page_a',
+              ),
+            ]))
         .enable()
         .enablePageLeave()
         .enablePageView()

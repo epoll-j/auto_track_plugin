@@ -111,22 +111,32 @@ class Track {
 class _TrackPlugin {
 
   static void pageView(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('page_view', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']));
+    var model = TrackModel('page_view', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']);
+    AutoTrackConfigManager.instance.config.eventHandler?.call(model);
+    AutoTrackQueue.instance.appendQueue(model);
   }
 
   static void pageLeave(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('page_leave', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']));
+    var model = TrackModel('page_leave', DateTime.now().millisecondsSinceEpoch, params, params['page_manual_key']);
+    AutoTrackConfigManager.instance.config.eventHandler?.call(model);
+    AutoTrackQueue.instance.appendQueue(model);
   }
 
   static void click(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('click', DateTime.now().millisecondsSinceEpoch, params, params['element_manual_key']));
+    var model = TrackModel('click', DateTime.now().millisecondsSinceEpoch, params, params['element_manual_key']);
+    AutoTrackConfigManager.instance.config.eventHandler?.call(model);
+    AutoTrackQueue.instance.appendQueue(model);
   }
 
   static void customEvent(String type, Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? type));
+    var model = TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? type);
+    AutoTrackConfigManager.instance.config.eventHandler?.call(model);
+    AutoTrackQueue.instance.appendQueue(model);
   }
 
   static void drag(Map<String, dynamic> params) {
-    AutoTrackQueue.instance.appendQueue(TrackModel('drag', DateTime.now().millisecondsSinceEpoch, params, params['manual_key']));
+    var model = TrackModel('drag', DateTime.now().millisecondsSinceEpoch, params, params['manual_key']);
+    AutoTrackConfigManager.instance.config.eventHandler?.call(model);
+    AutoTrackQueue.instance.appendQueue(model);
   }
 }

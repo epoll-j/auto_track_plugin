@@ -1,11 +1,13 @@
 # Auto_Track_Plugin
 
-> Flutter 自动埋点插件，支持 Android 和 iOS
+> Flutter全埋点插件，支持 Android 和 iOS
 
 低侵入全局自动埋点，自动记录页面进入、退出，点击、滑动等事件，并支持自定义事件。
 
 
 ## Getting Started 使用指南
+
+只需在入口配置`AutoTrack().config()`即可启用全局埋点
 
 目前仅在移动端验证通过，其他平台暂无验证。
 
@@ -39,8 +41,10 @@ class _MyAppState extends State<MyApp> {
     AutoTrack()
         .config(AutoTrackConfig( // 其余配置可查看AutoTrackConfig类
             host: 'http://localhost:3000/api/track',
-            appKey: 'xxxx',
-            appSecret: 'xxxx',
+            eventHandler: (model) => {
+              // 事件触发会调用此方法，可自行处理
+              print('event handler ${model.type}')
+            },
             pageConfigs: [
             AutoTrackPageConfig<PageA>(
                 pageID: 'page_a', // 配置页面ID，统计时可基于此ID进行统计
@@ -124,9 +128,10 @@ class PageA extends StatelessWidget {
 ```
 
 ### Data upload 数据上报
-数据上报需配合服务端使用，参考 [AutoTrack Server（开发中）](https://github.com/epoll-j/auto_track_server)，可自行实现服务端。
 
-数据上报的格式
+#### 配置host并启用数据上报后会定时上报数据
+
+##### 数据上报的格式
 ```
 {
     'app_key': config.appKey ?? '',
