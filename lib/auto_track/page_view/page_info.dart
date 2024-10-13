@@ -95,17 +95,17 @@ class PageInfo {
 }
 
 enum PageTimerState {
-  Init,
-  Start,
-  Pause,
-  Resume,
-  End,
+  init,
+  start,
+  pause,
+  resume,
+  end,
 }
 
 class PageTimer {
   PageTimer();
 
-  PageTimerState _state = PageTimerState.Init;
+  PageTimerState _state = PageTimerState.init;
   PageTimerState get state => _state;
 
   int _lastTimeStamp = 0;
@@ -118,41 +118,41 @@ class PageTimer {
   }
 
   start() {
-    if (_state != PageTimerState.Init && _state != PageTimerState.End) {
+    if (_state != PageTimerState.init && _state != PageTimerState.end) {
       return;
     }
 
-    _state = PageTimerState.Start;
+    _state = PageTimerState.start;
     _lastTimeStamp = DateTime.now().millisecondsSinceEpoch;
     _duration = const Duration();
   }
 
   pause() {
-    if (_state != PageTimerState.Start && _state != PageTimerState.Resume) {
+    if (_state != PageTimerState.start && _state != PageTimerState.resume) {
       return;
     }
 
-    _state = PageTimerState.Pause;
+    _state = PageTimerState.pause;
     _duration = Duration(milliseconds: _duration.inMilliseconds + _computeMilliseconds());
   }
 
   resume() {
-    if (_state != PageTimerState.Pause) {
+    if (_state != PageTimerState.pause) {
       return;
     }
 
-    _state = PageTimerState.Resume;
+    _state = PageTimerState.resume;
     _lastTimeStamp = DateTime.now().millisecondsSinceEpoch;
   }
 
   end() {
-    if (_state == PageTimerState.Pause) {
-      _state = PageTimerState.End;
+    if (_state == PageTimerState.pause) {
+      _state = PageTimerState.end;
       return;
     }
 
-    if (_state == PageTimerState.Start || _state == PageTimerState.Resume) {
-      _state = PageTimerState.End;
+    if (_state == PageTimerState.start || _state == PageTimerState.resume) {
+      _state = PageTimerState.end;
       _duration = Duration(milliseconds: _duration.inMilliseconds + _computeMilliseconds());
     }
   }

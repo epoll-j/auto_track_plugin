@@ -13,11 +13,11 @@ class AutoTrackLogger {
   bool get hasHandler => _handler != null;
 
   void info(String message) {
-    _print(AutoTrackLoggerLevel.Info, message);
+    _print(AutoTrackLoggerLevel.info, message);
   }
 
   void debug(String message) {
-    _print(AutoTrackLoggerLevel.Debug, message);
+    _print(AutoTrackLoggerLevel.debug, message);
   }
 
   void error(Object e) {
@@ -29,7 +29,7 @@ class AutoTrackLogger {
     } else if (e is DioException) {
       message = (e).message ?? 'dio exception with unknown message';
     }
-    _print(AutoTrackLoggerLevel.Error, message);
+    _print(AutoTrackLoggerLevel.error, message);
   }
 
   void setHandler(AutoTrackLoggerHandler handler) {
@@ -61,9 +61,9 @@ class AutoTrackLogger {
 }
 
 enum AutoTrackLoggerLevel {
-  Info,
-  Debug,
-  Error,
+  info,
+  debug,
+  error,
 }
 
 class _LoggerData {
