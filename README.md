@@ -40,6 +40,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     AutoTrack()
         .config(AutoTrackConfig( // 其余配置可查看AutoTrackConfig类
+            samplingRate: 0.9, // 采样率
             host: 'http://localhost:3000/api/track',
             eventHandler: (model) => {
               // 事件触发会调用此方法，可自行处理
@@ -89,6 +90,20 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+```
+##### 更新采样率
+```dart
+AutoTrack().updateSampleRate(0.5);
+```
+##### 登录后更新用户id
+```dart
+AutoTrack().updateUserId('userId'); 
+```
+##### 采样错误信息
+```dart
+FlutterError.onError = (details) {
+  Track.instance.reportError(details, details.stack!);
+};
 ```
 
 #### 具体使用

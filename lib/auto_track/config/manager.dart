@@ -62,6 +62,10 @@ class AutoTrackConfigManager {
     _config.userId = userId;
   }
 
+  void updateSampleRate(double rate) {
+    _config.samplingRate = rate;
+  }
+
   void updatePageConfigs(List<AutoTrackPageConfig> pageConfigs) {
     _config.pageConfigs = pageConfigs;
   }

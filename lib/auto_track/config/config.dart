@@ -11,6 +11,7 @@ class AutoTrackConfig {
   AutoTrackConfig({
     this.host, // 数据上报地址
     this.uploadInterval, // 数据上报间隔
+    this.samplingRate = 1, // 采样率
     this.appKey = '', // 数据上报时根据key和secret生成签名
     this.appSecret = '',
     this.signature, // 签名生成方法，默认使用sha256对key、时间戳和secret进行签名
@@ -39,6 +40,9 @@ class AutoTrackConfig {
   String? trackId;
   String? userId;
   String? uniqueId;
+
+  /// 采样率，默认 1 (100%)
+  double samplingRate;
 
   int? uploadInterval;
 

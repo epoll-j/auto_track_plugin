@@ -19,6 +19,10 @@ class AutoTrack {
     AutoTrackConfigManager.instance.updateUserId(id);
   }
 
+  void updateSampleRate(double rate) {
+    AutoTrackConfigManager.instance.updateSampleRate(rate);
+  }
+
   AutoTrack config(AutoTrackConfig? config) {
     if (config != null) {
       AutoTrackConfigManager.instance.updateConfig(config);

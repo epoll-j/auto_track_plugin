@@ -19,9 +19,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     AutoTrack()
         .config(AutoTrackConfig(
-            eventHandler: (model) => {
-              print('event handler ${model.type}')
-            },
+            samplingRate: 0.9, // 采样率
+            eventHandler: (model) => {print('event handler ${model.type}')},
             pageConfigs: [
               AutoTrackPageConfig<PageA>(
                 pageID: 'page_a',
@@ -34,8 +33,15 @@ class _MyAppState extends State<MyApp> {
         .enableDrag()
         .enableIgnoreNullKey()
         .enableLog();
-
     super.initState();
+
+    // AutoTrack().updateSampleRate(0.5); 更新采样率
+    // AutoTrack().updateUserId('xxxxxx'); 用户登录后设置用户id
+    //
+    // 采样错误信息
+    // FlutterError.onError = (details) {
+    //   Track.instance.reportError(details, details.stack!);
+    // };
   }
 
   @override

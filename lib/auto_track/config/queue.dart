@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_track/auto_track/config/manager.dart';
 import 'package:auto_track/auto_track/utils/track_model.dart';
@@ -39,6 +40,12 @@ class AutoTrackQueue {
     _queue.clear();
     final config = AutoTrackConfigManager.instance.config;
     final host = config.host;
+    if (config.samplingRate != 1) {
+      if (Random().nextDouble() > config.samplingRate) {
+        // 不在采样范围不上传
+        return;
+      }
+    }
     if (host != null) {
       final t = DateTime.now().millisecondsSinceEpoch;
       dio.post(host, data: {
