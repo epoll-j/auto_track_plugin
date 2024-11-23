@@ -31,7 +31,7 @@ class PageStack with WidgetsBindingObserver {
   push(Route route, Element element, Route? previousRoute) {
     Page page = Page(route, element);
     _stack.add(page);
-    _task.addpush(page, page.previous);
+    _task.addPush(page, page.previous);
   }
 
   pop(Route route, Route? previousRoute) {
@@ -41,7 +41,7 @@ class PageStack with WidgetsBindingObserver {
 
     Page? page = _findPage(route);
     if (page != null) {
-      _task.addpop(page, page.previous);
+      _task.addPop(page, page.previous);
     }
     _removeAllAfter(page);
   }
@@ -65,7 +65,7 @@ class PageStack with WidgetsBindingObserver {
       _removeAllAfter(oldPage);
     }
     _stack.add(newPage);
-    _task.addreplace(newPage, oldPage);
+    _task.addReplace(newPage, oldPage);
   }
 
   Page? _findPage(Route route) {
@@ -124,21 +124,21 @@ class _PageTask {
   final List<_PageTaskData> _list = [];
   bool _taskRunning = false;
 
-  addpush(Page page, Page? prevPage) {
+  addPush(Page page, Page? prevPage) {
     _PageTaskData taskData = _PageTaskData(_PageTaskType.push, page);
     taskData.prevPage = prevPage;
     _list.add(taskData);
     _triggerTask();
   }
 
-  addpop(Page page, Page? prevPage) {
+  addPop(Page page, Page? prevPage) {
     _PageTaskData taskData = _PageTaskData(_PageTaskType.pop, page);
     taskData.prevPage = prevPage;
     _list.add(taskData);
     _triggerTask();
   }
 
-  addreplace(Page page, Page? prevPage) {
+  addReplace(Page page, Page? prevPage) {
     _PageTaskData taskData = _PageTaskData(_PageTaskType.replace, page);
     taskData.prevPage = prevPage;
     _list.add(taskData);
@@ -182,13 +182,13 @@ class _PageTask {
       }
     }
     if (enterPage != leavePage) {
-      if (enterPage != null && !enterPage.pageInfo.ignore) {
-        enterPage.pageInfo.timer.start();
-        Track.instance.pageView(enterPage.pageInfo);
-      }
       if (leavePage != null && !leavePage.pageInfo.ignore) {
         leavePage.pageInfo.timer.end();
         Track.instance.pageLeave(leavePage.pageInfo);
+      }
+      if (enterPage != null && !enterPage.pageInfo.ignore) {
+        enterPage.pageInfo.timer.start();
+        Track.instance.pageView(enterPage.pageInfo);
       }
     }
     _taskRunning = false;
