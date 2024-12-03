@@ -76,6 +76,53 @@ class AutoTrackConfig {
   bool enableDrag;
 
   bool enableIgnoreNullKey;
+
+  copyWith({
+    String? host,
+    String? appKey,
+    String? appSecret,
+    String? trackId,
+    String? userId,
+    String? uniqueId,
+    double? samplingRate,
+    int? uploadInterval,
+    Function? signature,
+    EventHandlerFunc? eventHandler,
+    List<AutoTrackPageConfig>? pageConfigs,
+    bool? useCustomRoute,
+    List<Key>? ignoreElementKeys,
+    List<String>? ignoreElementStringKeys,
+    bool? enablePageView,
+    bool? enablePageLeave,
+    bool? enableClick,
+    bool? enableUpload,
+    bool? enableDrag,
+    bool? enableIgnoreNullKey,
+  }) {
+    return AutoTrackConfig(
+      host: host ?? this.host,
+      appKey: appKey ?? this.appKey,
+      appSecret: appSecret ?? this.appSecret,
+      trackId: trackId ?? this.trackId,
+      userId: userId ?? this.userId,
+      uniqueId: uniqueId ?? this.uniqueId,
+      samplingRate: samplingRate ?? this.samplingRate,
+      uploadInterval: uploadInterval ?? this.uploadInterval,
+      signature: signature ?? this.signature,
+      eventHandler: eventHandler ?? this.eventHandler,
+      pageConfigs: pageConfigs ?? this.pageConfigs,
+      useCustomRoute: useCustomRoute ?? this.useCustomRoute,
+      ignoreElementKeys: ignoreElementKeys ?? this.ignoreElementKeys,
+      ignoreElementStringKeys:
+      ignoreElementStringKeys ?? this.ignoreElementStringKeys,
+      enablePageView: enablePageView ?? this.enablePageView,
+      enablePageLeave: enablePageLeave ?? this.enablePageLeave,
+      enableClick: enableClick ?? this.enableClick,
+      enableUpload: enableUpload ?? this.enableUpload,
+      enableDrag: enableDrag ?? this.enableDrag,
+      enableIgnoreNullKey: enableIgnoreNullKey ?? this.enableIgnoreNullKey,
+    );
+  }
 }
 
 typedef PageWidgetFunc = bool Function(Widget);

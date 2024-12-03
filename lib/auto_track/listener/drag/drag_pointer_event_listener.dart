@@ -1,8 +1,8 @@
-import 'package:auto_track/auto_track/drag/drag_info.dart';
 import 'package:auto_track/auto_track/track/track.dart';
 import 'package:flutter/gestures.dart';
 
 import '../page_view/page_stack.dart';
+import 'drag_info.dart';
 
 class DragPointerEventListener {
   static final DragPointerEventListener instance = DragPointerEventListener._();

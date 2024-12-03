@@ -1,12 +1,13 @@
 import 'package:auto_track/auto_track/config/queue.dart';
-import 'package:auto_track/auto_track/drag/drag_info.dart';
 import 'package:auto_track/auto_track/utils/error_model.dart';
+import 'package:auto_track/auto_track/utils/request_model.dart';
 import 'package:auto_track/auto_track/utils/track_model.dart';
 
-import '../click/click_info.dart';
+import '../listener/click/click_info.dart';
 import '../config/manager.dart';
+import '../listener/drag/drag_info.dart';
 import '../log/logger.dart';
-import '../page_view/page_info.dart';
+import '../listener/page_view/page_info.dart';
 
 class Track {
   static final Track instance = Track._();
@@ -104,7 +105,13 @@ class Track {
   }
 
   void reportError(Object error, StackTrace stack) {
-    _TrackPlugin.customEvent('error', ErrorModel(error: error, stack: stack).toMap());
+    final model = ErrorModel(error: error, stack: stack);
+    _TrackPlugin.customEvent('error', model.toMap());
+    AutoTrackLogger.getInstance().debug('track error => ${model.toMap()}');
+  }
+
+  void reportHttpRequest(RequestModel requestModel) {
+    AutoTrackLogger.getInstance().debug('track request => ${requestModel.toMap()}');
   }
 }
 

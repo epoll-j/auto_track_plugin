@@ -1,9 +1,9 @@
-import 'package:auto_track/auto_track/drag/drag_pointer_event_listener.dart';
 import 'package:flutter/foundation.dart';
 
-import 'click/pointer_event_listener.dart';
+import 'listener/click/pointer_event_listener.dart';
 import 'config/config.dart';
 import 'config/manager.dart';
+import 'listener/drag/drag_pointer_event_listener.dart';
 import 'log/logger.dart';
 
 class AutoTrack {
