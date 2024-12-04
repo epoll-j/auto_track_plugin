@@ -1,4 +1,5 @@
-import 'package:dio/dio.dart';
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 
 typedef AutoTrackLoggerHandler = void Function(AutoTrackLoggerLevel level, String message);
@@ -26,8 +27,8 @@ class AutoTrackLogger {
       message = e.message;
     } else if (e is Error) {
       message = e.stackTrace.toString();
-    } else if (e is DioException) {
-      message = (e).message ?? 'dio exception with unknown message';
+    } else if (e is HttpException) {
+      message = e.message;
     }
     _print(AutoTrackLoggerLevel.error, message);
   }

@@ -10,7 +10,6 @@ environment:
 dependencies:
   crypto: ^3.0.3
   device_info_plus: ^9.1.2
-  dio: ^5.4.1
   flutter:
     sdk: flutter
   package_info_plus: ^8.0.1
