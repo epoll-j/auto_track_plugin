@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
-import 'listener/click/pointer_event_listener.dart';
 import 'config/config.dart';
 import 'config/manager.dart';
+import 'listener/click/pointer_event_listener.dart';
 import 'listener/drag/drag_pointer_event_listener.dart';
+import 'listener/request/request_listener.dart';
 import 'log/logger.dart';
 
 class AutoTrack {
@@ -16,98 +19,98 @@ class AutoTrack {
   }
 
   void updateUserId(String id) {
-    AutoTrackConfigManager.instance.updateUserId(id);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(userId: id));
   }
 
   void updateSampleRate(double rate) {
-    AutoTrackConfigManager.instance.updateSampleRate(rate);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(samplingRate: rate));
   }
 
   AutoTrack config(AutoTrackConfig? config) {
     if (config != null) {
-      AutoTrackConfigManager.instance.updateConfig(config);
+      AutoTrackConfigManager.instance.setConfig(config);
     }
     return _instance;
   }
 
   AutoTrack pageConfigs(List<AutoTrackPageConfig>? pageConfigs) {
     if (pageConfigs != null) {
-      AutoTrackConfigManager.instance.updatePageConfigs(pageConfigs);
+      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(pageConfigs: pageConfigs));
     }
     return _instance;
   }
 
   AutoTrack ignoreElementKeys(List<Key>? ignoreElementKeys) {
     if (ignoreElementKeys != null) {
-      AutoTrackConfigManager.instance.updateIgnoreElementKeys(ignoreElementKeys);
+      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(ignoreElementKeys: ignoreElementKeys));
     }
     return _instance;
   }
 
   AutoTrack ignoreElementStringKeys(List<String>? ignoreElementStringKeys) {
     if (ignoreElementStringKeys != null) {
-      AutoTrackConfigManager.instance.updateIgnoreElementStringKeys(ignoreElementStringKeys);
+      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(ignoreElementStringKeys: ignoreElementStringKeys));
     }
     return _instance;
   }
 
   AutoTrack enablePageView() {
-    AutoTrackConfigManager.instance.enablePageView(true);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageView: true));
     return _instance;
   }
 
   AutoTrack disablePageView() {
-    AutoTrackConfigManager.instance.enablePageView(false);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageView: false));
     return _instance;
   }
 
   AutoTrack enablePageLeave() {
-    AutoTrackConfigManager.instance.enablePageLeave(true);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageLeave: true));
     return _instance;
   }
 
   AutoTrack disablePageLeave() {
-    AutoTrackConfigManager.instance.enablePageLeave(false);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageLeave: false));
     return _instance;
   }
 
   AutoTrack enableIgnoreNullKey() {
-    AutoTrackConfigManager.instance.enableIgnoreNullKey(true);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableIgnoreNullKey: true));
     return _instance;
   }
 
   AutoTrack disableIgnoreNullKey() {
-    AutoTrackConfigManager.instance.enableIgnoreNullKey(false);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableIgnoreNullKey: false));
     return _instance;
   }
 
   AutoTrack enableUpload() {
-    AutoTrackConfigManager.instance.enableUpload(true);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableUpload: true));
     return _instance;
   }
 
   AutoTrack disableUpload() {
-    AutoTrackConfigManager.instance.enableUpload(false);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableUpload: false));
     return _instance;
   }
 
   AutoTrack enableClick() {
-    AutoTrackConfigManager.instance.enableClick(true);
-    return _instance;
-  }
-
-  AutoTrack enableDrag() {
-    AutoTrackConfigManager.instance.enableDrag(true);
-    return _instance;
-  }
-
-  AutoTrack disableDrag() {
-    AutoTrackConfigManager.instance.enableDrag(true);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableClick: true));
     return _instance;
   }
 
   AutoTrack disableClick() {
-    AutoTrackConfigManager.instance.enableClick(false);
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableClick: false));
+    return _instance;
+  }
+
+  AutoTrack enableDrag() {
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableDrag: true));
+    return _instance;
+  }
+
+  AutoTrack disableDrag() {
+    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableDrag: false));
     return _instance;
   }
 
@@ -134,6 +137,16 @@ class AutoTrack {
         }
       });
     }
+    return _instance;
+  }
+
+  AutoTrack enableHttpRequest() {
+    HttpOverrides.global = AutoTrackHttpOverrides(HttpOverrides.current);
+    return _instance;
+  }
+
+  AutoTrack disableHttpRequest() {
+    HttpOverrides.global = null;
     return _instance;
   }
 }

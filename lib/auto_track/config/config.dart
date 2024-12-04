@@ -123,6 +123,31 @@ class AutoTrackConfig {
       enableIgnoreNullKey: enableIgnoreNullKey ?? this.enableIgnoreNullKey,
     );
   }
+
+  merge(AutoTrackConfig config) {
+    return copyWith(
+      host: config.host,
+      appKey: config.appKey,
+      appSecret: config.appSecret,
+      trackId: config.trackId,
+      userId: config.userId,
+      uniqueId: config.uniqueId,
+      samplingRate: config.samplingRate,
+      uploadInterval: config.uploadInterval,
+      signature: config.signature,
+      eventHandler: config.eventHandler,
+      pageConfigs: config.pageConfigs,
+      useCustomRoute: config.useCustomRoute,
+      ignoreElementKeys: config.ignoreElementKeys,
+      ignoreElementStringKeys: config.ignoreElementStringKeys,
+      enablePageView: config.enablePageView,
+      enablePageLeave: config.enablePageLeave,
+      enableClick: config.enableClick,
+      enableUpload: config.enableUpload,
+      enableDrag: config.enableDrag,
+      enableIgnoreNullKey: config.enableIgnoreNullKey,
+    );
+  }
 }
 
 typedef PageWidgetFunc = bool Function(Widget);
