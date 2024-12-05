@@ -8,6 +8,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
 
+typedef UpdateConfigFunc = AutoTrackConfig Function(AutoTrackConfig);
+
 class AutoTrackConfigManager {
   static final AutoTrackConfigManager instance = AutoTrackConfigManager._();
 
@@ -37,13 +39,15 @@ class AutoTrackConfigManager {
   bool get autoTrackEnable => _autoTrackEnable;
 
   void setConfig(AutoTrackConfig config) {
-    updateConfig(config);
+    updateConfig((old) {
+      return config;
+    });
     _updateDeviceId();
   }
 
-  void updateConfig(AutoTrackConfig config) {
-    _config = _config.merge(config);
-    if (config.enableUpload) {
+  void updateConfig(UpdateConfigFunc func) {
+    _config = func(_config);
+    if (_config.enableUpload) {
       AutoTrackQueue.instance.start();
     } else {
       AutoTrackQueue.instance.stop();

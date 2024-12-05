@@ -19,11 +19,15 @@ class AutoTrack {
   }
 
   void updateUserId(String id) {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(userId: id));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(userId: id);
+    });
   }
 
   void updateSampleRate(double rate) {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(samplingRate: rate));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(samplingRate: rate);
+    });
   }
 
   AutoTrack config(AutoTrackConfig? config) {
@@ -35,82 +39,112 @@ class AutoTrack {
 
   AutoTrack pageConfigs(List<AutoTrackPageConfig>? pageConfigs) {
     if (pageConfigs != null) {
-      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(pageConfigs: pageConfigs));
+      AutoTrackConfigManager.instance.updateConfig((config) {
+        return config.copyWith(pageConfigs: pageConfigs);
+      });
     }
     return _instance;
   }
 
   AutoTrack ignoreElementKeys(List<Key>? ignoreElementKeys) {
     if (ignoreElementKeys != null) {
-      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(ignoreElementKeys: ignoreElementKeys));
+      AutoTrackConfigManager.instance.updateConfig((config) {
+        return config.copyWith(ignoreElementKeys: ignoreElementKeys);
+      });
     }
     return _instance;
   }
 
   AutoTrack ignoreElementStringKeys(List<String>? ignoreElementStringKeys) {
     if (ignoreElementStringKeys != null) {
-      AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(ignoreElementStringKeys: ignoreElementStringKeys));
+      AutoTrackConfigManager.instance.updateConfig((config) {
+        return config.copyWith(ignoreElementStringKeys: ignoreElementStringKeys);
+      });
     }
     return _instance;
   }
 
   AutoTrack enablePageView() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageView: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enablePageView: true);
+    });
     return _instance;
   }
 
   AutoTrack disablePageView() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageView: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enablePageView: false);
+    });
     return _instance;
   }
 
   AutoTrack enablePageLeave() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageLeave: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enablePageLeave: true);
+    });
     return _instance;
   }
 
   AutoTrack disablePageLeave() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enablePageLeave: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enablePageLeave: false);
+    });
     return _instance;
   }
 
   AutoTrack enableIgnoreNullKey() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableIgnoreNullKey: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableIgnoreNullKey: true);
+    });
     return _instance;
   }
 
   AutoTrack disableIgnoreNullKey() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableIgnoreNullKey: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableIgnoreNullKey: false);
+    });
     return _instance;
   }
 
   AutoTrack enableUpload() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableUpload: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableUpload: true);
+    });
     return _instance;
   }
 
   AutoTrack disableUpload() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableUpload: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableUpload: false);
+    });
     return _instance;
   }
 
   AutoTrack enableClick() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableClick: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableClick: true);
+    });
     return _instance;
   }
 
   AutoTrack disableClick() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableClick: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableClick: false);
+    });
     return _instance;
   }
 
   AutoTrack enableDrag() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableDrag: true));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableDrag: true);
+    });
     return _instance;
   }
 
   AutoTrack disableDrag() {
-    AutoTrackConfigManager.instance.updateConfig(AutoTrackConfig(enableDrag: false));
+    AutoTrackConfigManager.instance.updateConfig((config) {
+      return config.copyWith(enableDrag: false);
+    });
     return _instance;
   }
 
@@ -125,6 +159,7 @@ class AutoTrack {
     AutoTrackConfigManager.instance.enableAutoTrack(false);
     PointerEventListener.instance.stop();
     DragPointerEventListener.instance.stop();
+    disableHttpRequest();
     return _instance;
   }
 

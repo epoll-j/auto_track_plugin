@@ -3,11 +3,11 @@ import 'package:auto_track/auto_track/utils/error_model.dart';
 import 'package:auto_track/auto_track/utils/request_model.dart';
 import 'package:auto_track/auto_track/utils/track_model.dart';
 
-import '../listener/click/click_info.dart';
 import '../config/manager.dart';
+import '../listener/click/click_info.dart';
 import '../listener/drag/drag_info.dart';
-import '../log/logger.dart';
 import '../listener/page_view/page_info.dart';
+import '../log/logger.dart';
 
 class Track {
   static final Track instance = Track._();
@@ -111,6 +111,7 @@ class Track {
   }
 
   void reportHttpRequest(RequestModel requestModel) {
+    _TrackPlugin.customEvent('http', requestModel.toMap(), key: requestModel.uri.path);
     AutoTrackLogger.getInstance().debug('track request => ${requestModel.toMap()}');
   }
 }
@@ -135,8 +136,8 @@ class _TrackPlugin {
     AutoTrackQueue.instance.appendQueue(model);
   }
 
-  static void customEvent(String type, Map<String, dynamic> params) {
-    var model = TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? type);
+  static void customEvent(String type, Map<String, dynamic> params, { String? key }) {
+    var model = TrackModel(type, DateTime.now().millisecondsSinceEpoch, params, params['key'] ?? key ?? type);
     AutoTrackConfigManager.instance.config.eventHandler?.call(model);
     AutoTrackQueue.instance.appendQueue(model);
   }

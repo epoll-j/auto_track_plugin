@@ -1,3 +1,4 @@
-## 0.0.1
+## 0.0.7
 
-* TODO: Describe initial release.
+* remove dio dependency
+* add http request listener

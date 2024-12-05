@@ -8,10 +8,12 @@ import 'package:auto_track/auto_track/utils/track_model.dart';
 
 import '../log/logger.dart';
 
-
 class AutoTrackQueue {
   static final AutoTrackQueue instance = AutoTrackQueue._();
-  AutoTrackQueue._();
+  AutoTrackQueue._() {
+    httpClient.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+  }
 
   Timer? _timer;
   final List<TrackModel> _queue = [];
@@ -24,7 +26,10 @@ class AutoTrackQueue {
 
   void start() {
     if (_timer != null) return;
-    _timer = Timer.periodic(Duration(seconds: AutoTrackConfigManager.instance.config.uploadInterval ?? 10), (timer) {
+    _timer = Timer.periodic(
+        Duration(
+            seconds: AutoTrackConfigManager.instance.config.uploadInterval ??
+                10), (timer) {
       flush();
     });
   }
@@ -48,15 +53,17 @@ class AutoTrackQueue {
     }
     if (host != null) {
       final t = DateTime.now().millisecondsSinceEpoch;
+
       httpClient.postUrl(Uri.parse(host)).then((request) {
-        request.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
+        request.headers.contentType = ContentType.json;
         request.write(json.encode({
           'app_key': config.appKey ?? '',
           'signature': config.signature!(t),
           't': t,
           'user_id': config.userId ?? '',
           'track_id': config.trackId ?? '',
-          'unique_id': config.uniqueId ?? AutoTrackConfigManager.instance.deviceId,
+          'unique_id':
+              config.uniqueId ?? AutoTrackConfigManager.instance.deviceId,
           'device_id': AutoTrackConfigManager.instance.deviceId,
           'data_list': uploadList.map((e) => e.toMap()).toList(),
           'app_version': AutoTrackConfigManager.instance.appVersion,
@@ -64,7 +71,8 @@ class AutoTrackQueue {
         }));
         return request.close();
       }).then((response) {
-        AutoTrackLogger.getInstance().debug('upload status => ${response.statusCode}');
+        AutoTrackLogger.getInstance()
+            .debug('upload status => ${response.statusCode}');
       }).catchError((error) {
         AutoTrackLogger.getInstance().error(error);
       });

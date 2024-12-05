@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:auto_track/auto_track/track/track.dart';
 
+import '../../config/manager.dart';
 import '../../utils/request_model.dart';
 import '../page_view/page_stack.dart';
 
@@ -65,7 +66,10 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
           uri: _realRequest.uri,
           method: method,
           pageId: pageInfoData?.pageInfo?.pageKey ?? "",
-          requestHeaders: _realRequest.headers,
+          requestHeaders: AutoTrackConfigManager
+                  .instance.config.httpRequestConfig!.ignoreRequestHeader
+              ? null
+              : _realRequest.headers,
           message: message,
           status: -1,
           spent: _stopwatch.elapsedMilliseconds));
@@ -123,13 +127,13 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
     message = '$message: ${response.reasonPhrase}';
 
     _stopwatch.stop();
-
+    final config = AutoTrackConfigManager.instance.config.httpRequestConfig!;
     Track.instance.reportHttpRequest(RequestModel(
         uri: _realRequest.uri,
         method: method,
         pageId: pageInfoData?.pageInfo?.pageKey ?? "",
-        requestHeaders: request.headers,
-        responseHeaders: response.headers,
+        requestHeaders: config.ignoreRequestHeader ? null : request.headers,
+        responseHeaders: config.ignoreResponseHeader ? null : response.headers,
         message: message,
         status: response.statusCode,
         spent: _stopwatch.elapsedMilliseconds));
@@ -182,8 +186,8 @@ class HttpClientWithChecker implements HttpClient {
   @override
   set connectionFactory(
       Future<ConnectionTask<Socket>> Function(
-          Uri url, String? proxyHost, int? proxyPort)?
-      f) {
+              Uri url, String? proxyHost, int? proxyPort)?
+          f) {
     // TODO: add impl here
     assert(false);
   }
@@ -228,30 +232,30 @@ class HttpClientWithChecker implements HttpClient {
 
   @override
   void addCredentials(
-      Uri url, String realm, HttpClientCredentials credentials) =>
+          Uri url, String realm, HttpClientCredentials credentials) =>
       _realClient.addCredentials(url, realm, credentials);
 
   @override
   void addProxyCredentials(String host, int port, String realm,
-      HttpClientCredentials credentials) =>
+          HttpClientCredentials credentials) =>
       _realClient.addProxyCredentials(host, port, realm, credentials);
 
   @override
   set authenticate(
-      Future<bool> Function(Uri url, String scheme, String? realm)? f) =>
+          Future<bool> Function(Uri url, String scheme, String? realm)? f) =>
       _realClient.authenticate = f;
 
   @override
   set authenticateProxy(
-      Future<bool> Function(
-          String host, int port, String scheme, String? realm)?
-      f) =>
+          Future<bool> Function(
+                  String host, int port, String scheme, String? realm)?
+              f) =>
       _realClient.authenticateProxy = f;
 
   @override
   set badCertificateCallback(
-      bool Function(X509Certificate cert, String host, int port)?
-      callback) =>
+          bool Function(X509Certificate cert, String host, int port)?
+              callback) =>
       _realClient.badCertificateCallback = callback;
 
   @override
@@ -329,7 +333,7 @@ class HttpClientWithChecker implements HttpClient {
       path = path.substring(0, queryStart);
     }
     final Uri uri =
-    Uri(scheme: 'http', host: host, port: port, path: path, query: query);
+        Uri(scheme: 'http', host: host, port: port, path: path, query: query);
     return _addCheck(_realClient.open(method, host, port, path), method, uri);
   }
 
@@ -339,11 +343,19 @@ class HttpClientWithChecker implements HttpClient {
 
   Future<HttpClientRequest> _addCheck(
       Future<HttpClientRequest> request, String method, Uri url) {
+    final host = AutoTrackConfigManager.instance.config.host;
+    if (host != null) {
+      final uploadUrl = Uri.parse(host);
+      if (uploadUrl.host == url.host && uploadUrl.path == url.path) {
+        return request;
+      }
+    }
+
     final Stopwatch stopwatch = Stopwatch()..start();
     final Page? pageInfoData = PageStack.instance.getCurrentPage();
     return request
         .then((HttpClientRequest request) =>
-        HttpClientRequestWithChecker(request, stopwatch, pageInfoData))
+            HttpClientRequestWithChecker(request, stopwatch, pageInfoData))
         .catchError((dynamic error, dynamic stackTrace) {}, test: (error) {
       String message = error.toString();
       if (error is SocketException) {
@@ -381,4 +393,3 @@ class AutoTrackHttpOverrides extends HttpOverrides {
     return _currentOverrides!.findProxyFromEnvironment(url, environment);
   }
 }
-

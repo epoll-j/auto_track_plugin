@@ -6,7 +6,6 @@ class RequestModel {
     required this.status,
     required this.spent,
     required this.pageId,
-    this.requestBody,
     this.requestHeaders,
     this.responseHeaders,
   });
@@ -17,21 +16,19 @@ class RequestModel {
   String pageId;
   int status;
   int spent;
-  dynamic requestBody;
   dynamic requestHeaders;
   dynamic responseHeaders;
 
   Map<String, dynamic> toMap() {
     return {
-      'uri': uri,
+      'uri': uri.toString(),
       'method': method,
       'message': message,
       'pageId': pageId,
       'status': status,
       'spent': spent,
-      'requestBody': requestBody,
-      'requestHeaders': requestHeaders,
-      'responseHeaders': responseHeaders,
+      'requestHeaders': requestHeaders.toString(),
+      'responseHeaders': responseHeaders.toString(),
     };
   }
 }

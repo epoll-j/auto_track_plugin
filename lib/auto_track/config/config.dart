@@ -29,9 +29,12 @@ class AutoTrackConfig {
     this.enableClick = true, // 监听点击事件
     this.enableDrag = false, // 监听拖拽事件
     this.enableIgnoreNullKey = false, // 忽略空key事件
+    this.httpRequestConfig,
   }) {
     trackId ??= const Uuid().v4().replaceAll('-', '');
-    signature ??= (t) => sha256.convert(utf8.encode('$appKey$t$appSecret')).toString();
+    signature ??=
+        (t) => sha256.convert(utf8.encode('$appKey$t$appSecret')).toString();
+    httpRequestConfig ??= HttpRequestConfig();
   }
 
   String? host;
@@ -77,6 +80,8 @@ class AutoTrackConfig {
 
   bool enableIgnoreNullKey;
 
+  HttpRequestConfig? httpRequestConfig;
+
   copyWith({
     String? host,
     String? appKey,
@@ -98,6 +103,7 @@ class AutoTrackConfig {
     bool? enableUpload,
     bool? enableDrag,
     bool? enableIgnoreNullKey,
+    HttpRequestConfig? httpRequestConfig
   }) {
     return AutoTrackConfig(
       host: host ?? this.host,
@@ -114,38 +120,14 @@ class AutoTrackConfig {
       useCustomRoute: useCustomRoute ?? this.useCustomRoute,
       ignoreElementKeys: ignoreElementKeys ?? this.ignoreElementKeys,
       ignoreElementStringKeys:
-      ignoreElementStringKeys ?? this.ignoreElementStringKeys,
+          ignoreElementStringKeys ?? this.ignoreElementStringKeys,
       enablePageView: enablePageView ?? this.enablePageView,
       enablePageLeave: enablePageLeave ?? this.enablePageLeave,
       enableClick: enableClick ?? this.enableClick,
       enableUpload: enableUpload ?? this.enableUpload,
       enableDrag: enableDrag ?? this.enableDrag,
       enableIgnoreNullKey: enableIgnoreNullKey ?? this.enableIgnoreNullKey,
-    );
-  }
-
-  merge(AutoTrackConfig config) {
-    return copyWith(
-      host: config.host,
-      appKey: config.appKey,
-      appSecret: config.appSecret,
-      trackId: config.trackId,
-      userId: config.userId,
-      uniqueId: config.uniqueId,
-      samplingRate: config.samplingRate,
-      uploadInterval: config.uploadInterval,
-      signature: config.signature,
-      eventHandler: config.eventHandler,
-      pageConfigs: config.pageConfigs,
-      useCustomRoute: config.useCustomRoute,
-      ignoreElementKeys: config.ignoreElementKeys,
-      ignoreElementStringKeys: config.ignoreElementStringKeys,
-      enablePageView: config.enablePageView,
-      enablePageLeave: config.enablePageLeave,
-      enableClick: config.enableClick,
-      enableUpload: config.enableUpload,
-      enableDrag: config.enableDrag,
-      enableIgnoreNullKey: config.enableIgnoreNullKey,
+      httpRequestConfig: httpRequestConfig ?? this.httpRequestConfig
     );
   }
 }
@@ -153,13 +135,12 @@ class AutoTrackConfig {
 typedef PageWidgetFunc = bool Function(Widget);
 
 class AutoTrackPageConfig<T extends Widget> {
-  AutoTrackPageConfig({
-    this.pageID,
-    this.pagePath,
-    this.ignore = false,
-    this.pageTitle,
-    this.isPageWidget
-  }) {
+  AutoTrackPageConfig(
+      {this.pageID,
+      this.pagePath,
+      this.ignore = false,
+      this.pageTitle,
+      this.isPageWidget}) {
     isPageWidget ??= (pageWidget) => pageWidget is T;
   }
 
@@ -168,4 +149,14 @@ class AutoTrackPageConfig<T extends Widget> {
   bool ignore;
   String? pageTitle;
   PageWidgetFunc? isPageWidget;
+}
+
+class HttpRequestConfig {
+  bool ignoreRequestHeader;
+  bool ignoreResponseHeader;
+
+  HttpRequestConfig({
+    this.ignoreRequestHeader = false,
+    this.ignoreResponseHeader = false,
+  });
 }
