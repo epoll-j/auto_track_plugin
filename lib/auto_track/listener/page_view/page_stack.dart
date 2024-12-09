@@ -3,7 +3,7 @@ import 'dart:core';
 
 import 'package:flutter/widgets.dart';
 
-import '../track/track.dart';
+import '../../track/track.dart';
 import 'page_info.dart';
 
 class PageStack with WidgetsBindingObserver {

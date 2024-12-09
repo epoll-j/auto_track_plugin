@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 
-import '../config/config.dart';
-import '../config/manager.dart';
-import '../utils/element_util.dart';
+import '../../config/config.dart';
+import '../../config/manager.dart';
+import '../../utils/element_util.dart';
 
 class PageInfo {
   PageInfo._(this.timer);

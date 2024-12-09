@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/widgets.dart';
 
-import '../config/manager.dart';
+import '../../config/manager.dart';
 import '../page_view/page_info.dart';
-import '../utils/element_util.dart';
+import '../../utils/element_util.dart';
 import 'element_key.dart';
 import 'xpath.dart';
 

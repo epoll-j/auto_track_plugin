@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../config/config.dart';
-import '../config/manager.dart';
-import '../log/logger.dart';
-import '../utils/element_util.dart';
+import '../../config/config.dart';
+import '../../config/manager.dart';
+import '../../log/logger.dart';
+import '../../utils/element_util.dart';
 import 'page_stack.dart';
 
 class AutoTrackNavigationObserver extends NavigatorObserver {

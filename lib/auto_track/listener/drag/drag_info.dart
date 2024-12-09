@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../config/manager.dart';
 import '../page_view/page_info.dart';
 
 class DragInfo {

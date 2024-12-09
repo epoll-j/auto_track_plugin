@@ -8,6 +8,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import 'config.dart';
 
+typedef UpdateConfigFunc = AutoTrackConfig Function(AutoTrackConfig);
+
 class AutoTrackConfigManager {
   static final AutoTrackConfigManager instance = AutoTrackConfigManager._();
 
@@ -36,10 +38,16 @@ class AutoTrackConfigManager {
   bool _autoTrackEnable = false;
   bool get autoTrackEnable => _autoTrackEnable;
 
-  void updateConfig(AutoTrackConfig config) {
-    _config = config;
+  void setConfig(AutoTrackConfig config) {
+    updateConfig((old) {
+      return config;
+    });
     _updateDeviceId();
-    if (config.enableUpload) {
+  }
+
+  void updateConfig(UpdateConfigFunc func) {
+    _config = func(_config);
+    if (_config.enableUpload) {
       AutoTrackQueue.instance.start();
     } else {
       AutoTrackQueue.instance.stop();
@@ -58,57 +66,8 @@ class AutoTrackConfigManager {
     }
   }
 
-  void updateUserId(String userId) {
-    _config.userId = userId;
-  }
-
-  void updateSampleRate(double rate) {
-    _config.samplingRate = rate;
-  }
-
-  void updatePageConfigs(List<AutoTrackPageConfig> pageConfigs) {
-    _config.pageConfigs = pageConfigs;
-  }
-
-  void updateIgnoreElementKeys(List<Key> ignoreElementKeys) {
-    _config.ignoreElementKeys = ignoreElementKeys;
-  }
-
-  void updateIgnoreElementStringKeys(List<String> ignoreElementStringKeys) {
-    _config.ignoreElementStringKeys = ignoreElementStringKeys;
-  }
-
-  void enablePageView(bool enable) {
-    _config.enablePageView = enable;
-  }
-
-  void enablePageLeave(bool enable) {
-    _config.enablePageLeave = enable;
-  }
-
-  void enableClick(bool enable) {
-    _config.enableClick = enable;
-  }
-
-  void enableDrag(bool enable) {
-    _config.enableDrag = enable;
-  }
-
   void enableAutoTrack(bool enable) {
     _autoTrackEnable = enable;
-  }
-
-  void enableUpload(bool enable) {
-    _config.enableUpload = enable;
-    if (enable) {
-      AutoTrackQueue.instance.start();
-    } else {
-      AutoTrackQueue.instance.stop();
-    }
-  }
-
-  void enableIgnoreNullKey(bool enable) {
-    _config.enableIgnoreNullKey = enable;
   }
 
   List<AutoTrackPageConfig> get pageConfigs => _config.pageConfigs;
