@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:android_id/android_id.dart';
 import 'package:auto_track/auto_track/config/queue.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -56,11 +57,16 @@ class AutoTrackConfigManager {
 
   void _updateDeviceId() {
     if (_baseDeviceInfo is IosDeviceInfo) {
-      _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}')).toString();
+      _deviceId = md5
+          .convert(utf8.encode(
+              '${(_baseDeviceInfo as IosDeviceInfo).identifierForVendor}#${config.appKey}'))
+          .toString();
     } else if (_baseDeviceInfo is AndroidDeviceInfo) {
-      _deviceId = md5.convert(utf8.encode('${(_baseDeviceInfo as AndroidDeviceInfo).serialNumber}#${config.appKey}')).toString();
+      const AndroidId().getId().then((value) => _deviceId =
+          md5.convert(utf8.encode('$value#${config.appKey}')).toString());
     } else if (_baseDeviceInfo is MacOsDeviceInfo) {
-      _deviceId = '${(_baseDeviceInfo as MacOsDeviceInfo).hostName}-${(_baseDeviceInfo as MacOsDeviceInfo).computerName}';
+      _deviceId =
+          '${(_baseDeviceInfo as MacOsDeviceInfo).hostName}-${(_baseDeviceInfo as MacOsDeviceInfo).computerName}';
     } else {
       _deviceId = null;
     }
@@ -76,7 +82,7 @@ class AutoTrackConfigManager {
 
   AutoTrackPageConfig getPageConfig(Widget pageWidget) {
     return _config.pageConfigs.firstWhere(
-            (pageConfig) => pageConfig.isPageWidget!(pageWidget),
+        (pageConfig) => pageConfig.isPageWidget!(pageWidget),
         orElse: () => AutoTrackPageConfig());
   }
 
