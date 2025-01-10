@@ -8,7 +8,8 @@ import '../../utils/element_util.dart';
 import 'page_stack.dart';
 
 class AutoTrackNavigationObserver extends NavigatorObserver {
-  static List<NavigatorObserver> wrap(List<NavigatorObserver>? navigatorObservers) {
+  static List<NavigatorObserver> wrap(
+      List<NavigatorObserver>? navigatorObservers) {
     if (navigatorObservers == null) {
       return [AutoTrackNavigationObserver()];
     }
@@ -32,7 +33,8 @@ class AutoTrackNavigationObserver extends NavigatorObserver {
     return navigatorObservers;
   }
 
-  static List<NavigatorObserver> defaultNavigatorObservers() => [AutoTrackNavigationObserver()];
+  static List<NavigatorObserver> defaultNavigatorObservers() =>
+      [AutoTrackNavigationObserver()];
 
   @override
   void didPop(Route route, Route? previousRoute) {
@@ -86,7 +88,27 @@ class AutoTrackNavigationObserver extends NavigatorObserver {
 
   void _findElement(Route route, Function(Element) callback) {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      if (route is ModalRoute) {
+      if (AutoTrackConfigManager.instance.useCustomRoute) {
+        List<AutoTrackPageConfig> pageConfigs =
+            AutoTrackConfigManager.instance.pageConfigs;
+        if (pageConfigs.isEmpty) {
+          return;
+        }
+
+        Element? pageElement;
+        ElementUtil.walk(route.navigator?.context, (element, parent) {
+          for (var config in pageConfigs) {
+            if (config.isPageWidget!(element.widget)) {
+              pageElement = element;
+              return false;
+            }
+          }
+          return true;
+        });
+        if (pageElement != null) {
+          callback(pageElement!);
+        }
+      } else if (route is ModalRoute) {
         ModalRoute pageRoute = route;
         ElementUtil.walk(pageRoute.subtreeContext, (element, parent) {
           if (parent != null && parent.widget is Semantics) {
@@ -95,23 +117,6 @@ class AutoTrackNavigationObserver extends NavigatorObserver {
           }
           return true;
         });
-      } else if (AutoTrackConfigManager.instance.useCustomRoute) {
-        List<AutoTrackPageConfig> pageConfigs = AutoTrackConfigManager.instance.pageConfigs;
-        if (pageConfigs.isEmpty) {
-          return;
-        }
-
-        Element? lastPageElement;
-        ElementUtil.walk(route.navigator?.context, (element, parent) {
-          if (pageConfigs.last.isPageWidget!(element.widget)) {
-            lastPageElement = element;
-            return false;
-          }
-          return true;
-        });
-        if (lastPageElement != null) {
-          callback(lastPageElement!);
-        }
       }
     });
   }

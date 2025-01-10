@@ -31,7 +31,7 @@ class ClickInfo {
     clickInfo._texts = ElementUtil.findTexts(element);
     Key? key = element.widget.key;
     if (key != null && key is ValueKey) {
-      clickInfo._elementManualKey = (key).value;
+      clickInfo._elementManualKey = '${(key).value}';
     } else {
       clickInfo._elementManualKey = key?.toString() ?? md5.convert(utf8.encode('${clickInfo._elementType}${clickInfo._elementPath}')).toString();
     }

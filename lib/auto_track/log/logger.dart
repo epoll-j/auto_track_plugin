@@ -30,7 +30,7 @@ class AutoTrackLogger {
     } else if (e is HttpException) {
       message = e.message;
     }
-    _print(AutoTrackLoggerLevel.error, message);
+    _print(AutoTrackLoggerLevel.error, '$e \n $message');
   }
 
   void setHandler(AutoTrackLoggerHandler handler) {
