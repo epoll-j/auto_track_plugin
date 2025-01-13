@@ -1,6 +1,6 @@
 name: auto_track
 description: "Low-intrusion global automatic embedding, automatically recording events such as page entry, exit, clicks, scrolling, and HTTP requests, and supporting custom events."
-version: 0.0.7
+version: 0.1.0
 homepage: https://github.com/epoll-j/auto_track_plugin
 
 environment:
