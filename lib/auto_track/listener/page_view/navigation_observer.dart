@@ -87,7 +87,7 @@ class AutoTrackNavigationObserver extends NavigatorObserver {
   }
 
   void _findElement(Route route, Function(Element) callback) {
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       if (AutoTrackConfigManager.instance.useCustomRoute) {
         List<AutoTrackPageConfig> pageConfigs =
             AutoTrackConfigManager.instance.pageConfigs;

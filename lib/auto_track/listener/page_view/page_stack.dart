@@ -9,7 +9,7 @@ import 'page_info.dart';
 class PageStack with WidgetsBindingObserver {
   static final PageStack instance = PageStack._();
   PageStack._() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   final LinkedList<Page> _stack = LinkedList<Page>();

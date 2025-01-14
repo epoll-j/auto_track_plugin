@@ -13,7 +13,7 @@ class DragPointerEventListener {
   void start() {
     if (!_started) {
       _panGestureRecognizer = _AutoTrackPanGestureRecognizer();
-      GestureBinding.instance?.pointerRouter
+      GestureBinding.instance.pointerRouter
           .addGlobalRoute(_panGestureRecognizer.addPointer);
       _started = true;
     }
@@ -21,7 +21,7 @@ class DragPointerEventListener {
 
   void stop() {
     if (_started) {
-      GestureBinding.instance?.pointerRouter
+      GestureBinding.instance.pointerRouter
           .removeGlobalRoute(_panGestureRecognizer.addPointer);
       _panGestureRecognizer.dispose();
       _started = false;
@@ -55,8 +55,8 @@ class _AutoTrackPanGestureRecognizer extends PanGestureRecognizer {
           final info = DragInfo.from(
               begin: beginEvent!.position,
               end: event.position,
-              pageElement: page!.element,
-              pageInfo: page!.pageInfo,
+              pageElement: page.element,
+              pageInfo: page.pageInfo,
               duration: DateTime.now().millisecondsSinceEpoch - startTime);
           if (!info.ignore) {
             Track.instance.drag(info);

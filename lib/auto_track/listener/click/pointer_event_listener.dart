@@ -21,7 +21,7 @@ class PointerEventListener {
 
   void start() {
     if (!_started) {
-      GestureBinding.instance?.pointerRouter.addGlobalRoute(_pointerRoute);
+      GestureBinding.instance.pointerRouter.addGlobalRoute(_pointerRoute);
       _gestureRecognizer = _AutoTrackTapGestureRecognizer();
       _gestureRecognizer.onTap = (){};
       _started = true;
@@ -30,7 +30,7 @@ class PointerEventListener {
 
   void stop() {
     if (_started) {
-      GestureBinding.instance?.pointerRouter.removeGlobalRoute(_pointerRoute);
+      GestureBinding.instance.pointerRouter.removeGlobalRoute(_pointerRoute);
       _gestureRecognizer.dispose();
       _started = false;
     }

@@ -54,7 +54,9 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
     return _realRequest.close().then((HttpClientResponse response) {
       _checkResponse(_realRequest, response);
       return response;
-    }).catchError((dynamic error, dynamic stackTrace) {}, test: (error) {
+    }).catchError((dynamic error, dynamic stackTrace) {
+      return error;
+    }, test: (error) {
       _stopwatch.stop();
       String message;
       if (error is HttpException) {
@@ -65,7 +67,7 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
       Track.instance.reportHttpRequest(RequestModel(
           uri: _realRequest.uri,
           method: method,
-          pageId: pageInfoData?.pageInfo?.pageKey ?? "",
+          pageId: pageInfoData?.pageInfo.pageKey ?? "",
           requestHeaders: AutoTrackConfigManager
                   .instance.config.httpRequestConfig!.ignoreRequestHeader
               ? null
@@ -131,7 +133,7 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
     Track.instance.reportHttpRequest(RequestModel(
         uri: _realRequest.uri,
         method: method,
-        pageId: pageInfoData?.pageInfo?.pageKey ?? "",
+        pageId: pageInfoData?.pageInfo.pageKey ?? "",
         requestHeaders: config.ignoreRequestHeader ? null : request.headers,
         responseHeaders: config.ignoreResponseHeader ? null : response.headers,
         message: message,
@@ -356,7 +358,9 @@ class HttpClientWithChecker implements HttpClient {
     return request
         .then((HttpClientRequest request) =>
             HttpClientRequestWithChecker(request, stopwatch, pageInfoData))
-        .catchError((dynamic error, dynamic stackTrace) {}, test: (error) {
+        .catchError((dynamic error, dynamic stackTrace) {
+      return error;
+    }, test: (error) {
       String message = error.toString();
       if (error is SocketException) {
         message = error.message;
@@ -364,7 +368,7 @@ class HttpClientWithChecker implements HttpClient {
       Track.instance.reportHttpRequest(RequestModel(
           uri: url,
           method: method,
-          pageId: pageInfoData?.pageInfo?.pageKey ?? "",
+          pageId: pageInfoData?.pageInfo.pageKey ?? "",
           requestHeaders: null,
           message: message,
           status: -1,
