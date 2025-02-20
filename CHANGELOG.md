@@ -1,3 +1,6 @@
+## 0.2.0
+* add custom upload handler
+
 ## 0.1.0
 * fix custom route observer
 

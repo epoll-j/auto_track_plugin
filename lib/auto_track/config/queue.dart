@@ -41,7 +41,7 @@ class AutoTrackQueue {
 
   void flush() {
     if (_queue.isEmpty) return;
-    final uploadList = List.from(_queue);
+    final uploadList = List<TrackModel>.from(_queue);
     _queue.clear();
     final config = AutoTrackConfigManager.instance.config;
     final host = config.host;
@@ -51,31 +51,36 @@ class AutoTrackQueue {
         return;
       }
     }
-    if (host != null) {
-      final t = DateTime.now().millisecondsSinceEpoch;
 
-      httpClient.postUrl(Uri.parse(host)).then((request) {
-        request.headers.contentType = ContentType.json;
-        request.write(json.encode({
-          'app_key': config.appKey ?? '',
-          'signature': config.signature!(t),
-          't': t,
-          'user_id': config.userId ?? '',
-          'track_id': config.trackId ?? '',
-          'unique_id':
-              config.uniqueId ?? AutoTrackConfigManager.instance.deviceId,
-          'device_id': AutoTrackConfigManager.instance.deviceId,
-          'data_list': uploadList.map((e) => e.toMap()).toList(),
-          'app_version': AutoTrackConfigManager.instance.appVersion,
-          'device_info': AutoTrackConfigManager.instance.deviceInfo
-        }));
-        return request.close();
-      }).then((response) {
-        AutoTrackLogger.getInstance()
-            .debug('upload status => ${response.statusCode}');
-      }).catchError((error) {
-        AutoTrackLogger.getInstance().error(error);
-      });
+    if (config.uploadHandler != null) {
+      config.uploadHandler!(uploadList);
+    } else {
+      if (host != null) {
+        final t = DateTime.now().millisecondsSinceEpoch;
+
+        httpClient.postUrl(Uri.parse(host)).then((request) {
+          request.headers.contentType = ContentType.json;
+          request.write(json.encode({
+            'app_key': config.appKey ?? '',
+            'signature': config.signature!(t),
+            't': t,
+            'user_id': config.userId ?? '',
+            'track_id': config.trackId ?? '',
+            'unique_id':
+            config.uniqueId ?? AutoTrackConfigManager.instance.deviceId,
+            'device_id': AutoTrackConfigManager.instance.deviceId,
+            'data_list': uploadList.map((e) => e.toMap()).toList(),
+            'app_version': AutoTrackConfigManager.instance.appVersion,
+            'device_info': AutoTrackConfigManager.instance.deviceInfo
+          }));
+          return request.close();
+        }).then((response) {
+          AutoTrackLogger.getInstance()
+              .debug('upload status => ${response.statusCode}');
+        }).catchError((error) {
+          AutoTrackLogger.getInstance().error(error);
+        });
+      }
     }
   }
 }

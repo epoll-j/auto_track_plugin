@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 typedef EventHandlerFunc = void Function(TrackModel);
+typedef UploadHandlerFunc = Future<void> Function(List<TrackModel>);
 
 class AutoTrackConfig {
   AutoTrackConfig({
@@ -20,6 +21,7 @@ class AutoTrackConfig {
     this.userId, // 用户ID
     this.uniqueId,
     this.eventHandler, // 事件处理
+    this.uploadHandler, // 上报数据处理
     this.pageConfigs = const [],
     this.useCustomRoute = false, // 使用自定义路由
     this.ignoreElementKeys = const [], // 忽略key列表
@@ -50,7 +52,10 @@ class AutoTrackConfig {
   int? uploadInterval;
 
   Function? signature;
+  /// 自定义事件处理
   EventHandlerFunc? eventHandler;
+  /// 自定义上报处理
+  UploadHandlerFunc? uploadHandler;
 
   List<AutoTrackPageConfig> pageConfigs;
 
