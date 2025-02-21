@@ -7,6 +7,8 @@ import 'package:auto_track/auto_track/track/track.dart';
 import '../../config/manager.dart';
 import '../../utils/request_model.dart';
 import '../page_view/page_stack.dart';
+import 'intercepted_http_client_response.dart';
+
 
 class HttpClientRequestWithChecker implements HttpClientRequest {
   final HttpClientRequest _realRequest;
@@ -52,8 +54,7 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
   @override
   Future<HttpClientResponse> close() async {
     return _realRequest.close().then((HttpClientResponse response) {
-      _checkResponse(_realRequest, response);
-      return response;
+      return _checkResponse(_realRequest, response);
     }).catchError((dynamic error, dynamic stackTrace) {
       return error;
     }, test: (error) {
@@ -124,21 +125,40 @@ class HttpClientRequestWithChecker implements HttpClientRequest {
     _realRequest.writeln(obj);
   }
 
-  void _checkResponse(HttpClientRequest request, HttpClientResponse response) {
+  Future<HttpClientResponse> _checkResponse(
+      HttpClientRequest request, HttpClientResponse response) async {
     String message = 'status ${response.statusCode}';
     message = '$message: ${response.reasonPhrase}';
 
     _stopwatch.stop();
     final config = AutoTrackConfigManager.instance.config.httpRequestConfig!;
+    String? responseBody;
+    var returnResponse = response;
+    if (!config.ignoreResponseBody) {
+      final contentType = response.headers.contentType;
+      if (contentType != null &&
+          ((contentType.primaryType == 'text' || contentType.subType == 'json') &&
+              contentType.charset == 'utf-8')) {
+        try {
+          responseBody = await response.transform(utf8.decoder).join();
+          returnResponse = InterceptedHttpClientResponse(
+              response, Stream.value(utf8.encode(responseBody)));
+        } catch (e) {}
+      }
+    }
+
     Track.instance.reportHttpRequest(RequestModel(
         uri: _realRequest.uri,
         method: method,
         pageId: pageInfoData?.pageInfo.pageKey ?? "",
         requestHeaders: config.ignoreRequestHeader ? null : request.headers,
         responseHeaders: config.ignoreResponseHeader ? null : response.headers,
+        responseBody: config.ignoreResponseBody ? null : responseBody,
         message: message,
         status: response.statusCode,
         spent: _stopwatch.elapsedMilliseconds));
+
+    return returnResponse;
   }
 
   @override
@@ -190,13 +210,11 @@ class HttpClientWithChecker implements HttpClient {
       Future<ConnectionTask<Socket>> Function(
               Uri url, String? proxyHost, int? proxyPort)?
           f) {
-    // TODO: add impl here
     assert(false);
   }
 
   @override
   set keyLog(Function(String line)? callback) {
-    // TODO: add impl here
     assert(false);
   }
 

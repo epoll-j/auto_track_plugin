@@ -8,6 +8,7 @@ class RequestModel {
     required this.pageId,
     this.requestHeaders,
     this.responseHeaders,
+    this.responseBody,
   });
 
   Uri uri;
@@ -18,6 +19,7 @@ class RequestModel {
   int spent;
   dynamic requestHeaders;
   dynamic responseHeaders;
+  String? responseBody;
 
   Map<String, dynamic> toMap() {
     return {
@@ -29,6 +31,7 @@ class RequestModel {
       'spent': spent,
       'requestHeaders': requestHeaders.toString(),
       'responseHeaders': responseHeaders.toString(),
+      'responseBody': responseBody,
     };
   }
 }

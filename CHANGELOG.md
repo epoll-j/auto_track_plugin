@@ -1,3 +1,6 @@
+## 0.2.1
+* add http response body track
+
 ## 0.2.0
 * add custom upload handler
 

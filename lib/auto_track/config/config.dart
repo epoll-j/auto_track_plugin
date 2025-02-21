@@ -159,9 +159,11 @@ class AutoTrackPageConfig<T extends Widget> {
 class HttpRequestConfig {
   bool ignoreRequestHeader;
   bool ignoreResponseHeader;
+  bool ignoreResponseBody;
 
   HttpRequestConfig({
     this.ignoreRequestHeader = false,
     this.ignoreResponseHeader = false,
+    this.ignoreResponseBody = true,
   });
 }
