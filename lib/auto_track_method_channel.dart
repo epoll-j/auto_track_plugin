@@ -12,6 +12,7 @@ class MethodChannelAutoTrack extends AutoTrackPlatform {
   @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    methodChannel.invokeMethod('getLastCrashReport');
     return version;
   }
 }
