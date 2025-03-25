@@ -15,4 +15,18 @@ class MethodChannelAutoTrack extends AutoTrackPlatform {
     methodChannel.invokeMethod('getLastCrashReport');
     return version;
   }
+
+  Future<String?> getLastCrashReport() async {
+    return await methodChannel.invokeMethod('getLastCrashReport');
+  }
+
+  Future<void> cleanCrashReport() async {
+    final deviceId = await methodChannel.invokeMethod('cleanCrashReports');
+    return deviceId;
+  }
+
+  Future<void> testCrash() async {
+    final deviceId = await methodChannel.invokeMethod('testCrash');
+    return deviceId;
+  }
 }
