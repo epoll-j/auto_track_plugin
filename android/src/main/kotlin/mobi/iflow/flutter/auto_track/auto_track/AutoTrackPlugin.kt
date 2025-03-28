@@ -1,30 +1,30 @@
 package mobi.iflow.flutter.auto_track.auto_track
 
 import androidx.annotation.NonNull
-
 import android.content.Context
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import java.io.File
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.util.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.util.Date
 
-/** AutoTrackPlugin */
-class AutoTrackPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
-  private lateinit var context : Context
+class AutoTrackPlugin : FlutterPlugin, MethodCallHandler {
+
+  private lateinit var channel: MethodChannel
+  private lateinit var context: Context
 
   private val crashLogPath: String by lazy {
-    File(context.filesDir, "auto_track_crash.log").absolutePath
+    File(context.filesDir, "crash_reports").apply {
+      if (!exists()) mkdirs()
+    }.absolutePath + File.separator + "auto_track_crash.log"
   }
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -32,73 +32,85 @@ class AutoTrackPlugin: FlutterPlugin, MethodCallHandler {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "auto_track")
     channel.setMethodCallHandler(this)
     setupNativeCrashHandler()
+    rotateLogs()
   }
 
-  // 初始化崩溃监控
   private fun setupNativeCrashHandler() {
     val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
 
     Thread.setDefaultUncaughtExceptionHandler { thread, ex ->
-      // 生成崩溃报告
-      val report = buildCrashReport(ex, context)
-      writeToFile(report)
+      Thread {
+        writeToFile(buildCrashReport(ex))
 
-      // 调用默认处理器（崩溃弹窗）
-      defaultHandler?.uncaughtException(thread, ex)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//          defaultHandler?.uncaughtException(thread, ex)
+//          android.os.Process.killProcess(android.os.Process.myPid())
+//        }, 700)
+      }.start()
     }
   }
 
-  // 修复后的 buildCrashReport
-  private fun buildCrashReport(ex: Throwable, context: Context): String {
-    val sw = StringWriter()
-    val pw = PrintWriter(sw)
-    ex.printStackTrace(pw)
-
-    return """
-            === NATIVE CRASH REPORT ===
-            Timestamp: \(  {Date()}
-            Device:   \){android.os.Build.MANUFACTURER} \(  {android.os.Build.MODEL}
-            OS Version: Android   \){android.os.Build.VERSION.RELEASE}
-            
-            Stack Trace:
-            \(  {sw.toString()}
-        """.trimIndent()
+  private fun buildCrashReport(ex: Throwable): String {
+    return StringWriter().use { sw ->
+      ex.printStackTrace(PrintWriter(sw))
+      """
+=== NATIVE CRASH REPORT ===
+Timestamp: ${Date().time}
+Stack Trace:
+${sw}
+=== END CRASH REPORT ===            
+""".trimIndent()
+    }
   }
 
-  // 修复后的 writeToFile
   private fun writeToFile(content: String) {
     try {
-      // 正确写法（插入变量）
-      File(crashLogPath).appendText("$content \n")
+      File(crashLogPath).apply {
+        parentFile?.mkdirs()
+        appendText("$content")
+      }
     } catch (e: Exception) {
       Log.e("AutoTrack", "保存崩溃日志失败", e)
     }
   }
 
-  // 读取日志
   private fun readCrashLog(): String? {
     return try {
-      File(crashLogPath).readText()
+      File(crashLogPath).takeIf { it.exists() }?.readText()
     } catch (e: Exception) {
       null
     }
   }
 
-  // 清理日志
   private fun cleanCrashLogs() {
-    File(crashLogPath).delete()
+    try {
+      File(crashLogPath).delete()
+    } catch (e: Exception) {
+      Log.e("AutoTrack", "清理日志失败", e)
+    }
   }
 
-  // 触发测试崩溃
+  private fun rotateLogs() {
+    val file = File(crashLogPath)
+    if (file.length() > 1024 * 1024) {
+      file.delete()
+      file.createNewFile()
+    }
+  }
+
   private fun triggerTestCrash() {
-    throw RuntimeException("This is a test crash")
+    Handler(Looper.getMainLooper()).postDelayed({
+      throw RuntimeException("This is a test crash")
+    }, 100)
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
-      "getLastCrashReport" -> result.success(readCrashLog())
-      "cleanCrashReports" -> {
+      "getLastCrashReport" -> {
+        result.success(readCrashLog())
         cleanCrashLogs()
+      }
+      "cleanCrashReports" -> {
         result.success(null)
       }
       "testCrash" -> {
