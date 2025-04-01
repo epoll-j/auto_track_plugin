@@ -1,3 +1,6 @@
+## 0.3.0
+* add native crash handler
+
 ## 0.2.1
 * add http response body track
 

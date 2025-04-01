@@ -14,4 +14,20 @@ class MethodChannelAutoTrack extends AutoTrackPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  Future<void> enableNativeCrash() async {
+    return await methodChannel.invokeMethod('enableNativeCrashHandler');
+  }
+
+  Future<String?> getLastCrashReport() async {
+    return await methodChannel.invokeMethod('getLastCrashReport');
+  }
+
+  Future<void> cleanCrashReport() async {
+    return await methodChannel.invokeMethod('cleanCrashReports');
+  }
+
+  Future<void> testCrash() async {
+    return await methodChannel.invokeMethod('testCrash');
+  }
 }

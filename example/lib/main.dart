@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
         .enableClick()
         .enableDrag()
         .enableIgnoreNullKey()
+        .enableNativeCrash()
         .enableLog();
     super.initState();
 

@@ -2,7 +2,7 @@
 
 > Flutter全埋点插件，支持 Android 和 iOS
 
-低侵入全局自动埋点，自动记录页面进入、退出，点击、滑动、http请求等事件，并支持自定义事件。
+低侵入全局自动埋点，自动记录页面进入、退出，点击、滑动、http请求、原生崩溃等事件，并支持自定义事件。
 
 
 ## Getting Started 使用指南
@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
         .enableDrag() // 启用滑动统计
         .enableIgnoreNullKey() // 忽略空的key，如果不忽略，没有配置key的页面或事件会基于一定的规则生成一个随机的key进行上报统计
         .enableHttpRequest() // 启用http请求监听
+        .enableNativeCrash() // 监听原生crash信息
         .enableLog(); // 启用日志，建议在debug模式下开启，会打印一些埋点相关的日志
 
     super.initState();
