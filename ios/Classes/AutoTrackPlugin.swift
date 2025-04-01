@@ -12,9 +12,12 @@ private let signalHandler: @convention(c) (Int32) -> Void = { sig in
     let signalName = signalName(for: sig)
     let stack = Thread.callStackSymbols.joined(separator: "\n")
     let report = """
+    === NATIVE CRASH REPORT ===
+    Timestamp: \(Int(Date().timeIntervalSince1970 * 1000))
     Signal: \(signalName) (\(sig))
     Call Stack:
     \(stack)
+    === END CRASH REPORT ===
     """
     writeToFile(content: report)
     // 恢复默认处理并重新抛出信号
@@ -28,17 +31,20 @@ public class AutoTrackPlugin: NSObject, FlutterPlugin {
         let channel = FlutterMethodChannel(name: "auto_track", binaryMessenger: registrar.messenger())
         let instance = AutoTrackPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-        setupNativeCrashHandler()
+//        setupNativeCrashHandler()
     }
     
     // MARK: - 初始化原生崩溃监控
-    private static func setupNativeCrashHandler() {
+    private func setupNativeCrashHandler() {
         NSSetUncaughtExceptionHandler { exception in
             let report = """
+            === NATIVE CRASH REPORT ===
+            Timestamp: \(Int(Date().timeIntervalSince1970 * 1000))
             Exception Name: \(exception.name.rawValue)
             Reason: \(exception.reason ?? "未知原因")
             Call Stack:
             \(exception.callStackSymbols.joined(separator: "\n"))
+            === END CRASH REPORT ===
             """
             writeToFile(content: report)
         }
@@ -54,15 +60,15 @@ public class AutoTrackPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "getLastCrashReport":
             result(readCrashLog())
-            
         case "cleanCrashReports":
             cleanCrashLogs()
             result(nil)
-            
+        case "enableNativeCrashHandler":
+            setupNativeCrashHandler()
+            result(nil)
         case "testCrash":
             triggerTestCrash()
             result(nil)
-            
         default:
             result(FlutterMethodNotImplemented)
         }

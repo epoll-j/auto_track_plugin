@@ -12,8 +12,11 @@ class MethodChannelAutoTrack extends AutoTrackPlatform {
   @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    methodChannel.invokeMethod('getLastCrashReport');
     return version;
+  }
+
+  Future<void> enableNativeCrash() async {
+    return await methodChannel.invokeMethod('enableNativeCrashHandler');
   }
 
   Future<String?> getLastCrashReport() async {
@@ -21,12 +24,10 @@ class MethodChannelAutoTrack extends AutoTrackPlatform {
   }
 
   Future<void> cleanCrashReport() async {
-    final deviceId = await methodChannel.invokeMethod('cleanCrashReports');
-    return deviceId;
+    return await methodChannel.invokeMethod('cleanCrashReports');
   }
 
   Future<void> testCrash() async {
-    final deviceId = await methodChannel.invokeMethod('testCrash');
-    return deviceId;
+    return await methodChannel.invokeMethod('testCrash');
   }
 }

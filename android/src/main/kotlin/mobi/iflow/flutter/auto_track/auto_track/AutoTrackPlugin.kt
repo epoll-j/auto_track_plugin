@@ -31,8 +31,7 @@ class AutoTrackPlugin : FlutterPlugin, MethodCallHandler {
     context = flutterPluginBinding.applicationContext
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "auto_track")
     channel.setMethodCallHandler(this)
-    setupNativeCrashHandler()
-    rotateLogs()
+//    setupNativeCrashHandler()
   }
 
   private fun setupNativeCrashHandler() {
@@ -90,13 +89,13 @@ ${sw}
     }
   }
 
-  private fun rotateLogs() {
-    val file = File(crashLogPath)
-    if (file.length() > 1024 * 1024) {
-      file.delete()
-      file.createNewFile()
-    }
-  }
+//  private fun rotateLogs() {
+//    val file = File(crashLogPath)
+//    if (file.length() > 1024 * 1024) {
+//      file.delete()
+//      file.createNewFile()
+//    }
+//  }
 
   private fun triggerTestCrash() {
     Handler(Looper.getMainLooper()).postDelayed({
@@ -108,9 +107,13 @@ ${sw}
     when (call.method) {
       "getLastCrashReport" -> {
         result.success(readCrashLog())
-        cleanCrashLogs()
       }
       "cleanCrashReports" -> {
+        result.success(null)
+        cleanCrashLogs()
+      }
+      "enableNativeCrashHandler" -> {
+        setupNativeCrashHandler()
         result.success(null)
       }
       "testCrash" -> {

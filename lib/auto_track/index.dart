@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:auto_track/auto_track/track/track.dart';
 import 'package:flutter/foundation.dart';
 
+import '../auto_track_method_channel.dart';
 import 'config/config.dart';
 import 'config/manager.dart';
 import 'listener/click/pointer_event_listener.dart';
@@ -15,6 +17,14 @@ class AutoTrack {
 
   factory AutoTrack({ AutoTrackConfig? config }) {
     _instance.config(config);
+
+    MethodChannelAutoTrack().getLastCrashReport().then((report) {
+      if (report != null) {
+        Track.instance.customEvent('native_crash', {'report': report});
+      }
+      MethodChannelAutoTrack().cleanCrashReport();
+    });
+
     return _instance;
   }
 
@@ -145,6 +155,11 @@ class AutoTrack {
     AutoTrackConfigManager.instance.updateConfig((config) {
       return config.copyWith(enableDrag: false);
     });
+    return _instance;
+  }
+
+  AutoTrack enableNativeCrash() {
+    MethodChannelAutoTrack().enableNativeCrash();
     return _instance;
   }
 

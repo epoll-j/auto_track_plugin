@@ -101,18 +101,18 @@ class Track {
 
   void customEvent(String type, Map<String, dynamic> params) {
     _TrackPlugin.customEvent(type, params);
-    AutoTrackLogger.getInstance().debug('track custom_event => $params');
+    AutoTrackLogger.getInstance().debug('track $type => $params');
   }
 
   void reportError(Object error, StackTrace stack) {
     final model = ErrorModel(error: error, stack: stack);
     _TrackPlugin.customEvent('error', model.toMap());
-    AutoTrackLogger.getInstance().debug('track error => ${model.toMap()}');
+    // AutoTrackLogger.getInstance().debug('track error => ${model.toMap()}');
   }
 
   void reportHttpRequest(RequestModel requestModel) {
     _TrackPlugin.customEvent('http', requestModel.toMap(), key: requestModel.uri.path);
-    AutoTrackLogger.getInstance().debug('track request => ${requestModel.toMap()}');
+    // AutoTrackLogger.getInstance().debug('track request => ${requestModel.toMap()}');
   }
 }
 
